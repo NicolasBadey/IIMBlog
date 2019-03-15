@@ -4,43 +4,39 @@ namespace App\Command;
 use App\Model\ETL\ETLArticle;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ETLCommand extends Command
+class ETLArticleCommand extends Command
 {
 
     /**
      * @var ETLArticle
      */
-    protected $etl_article;
-
+    protected $etlArticle;
 
     /**
      * ETLCommand constructor.
      * @param ETLArticle $etl_article
      */
-    public function __construct(ETLArticle $etl_article)
+    public function __construct(ETLArticle $etlArticle)
     {
         parent::__construct();
 
-        $this->etl_article = $etl_article;
+        $this->etlArticle = $etlArticle;
     }
 
 
     protected function configure()
     {
         $this
-            ->setName('app:etl')
-            ->setDescription('ETL for populate Elasticsearch from SQL')
-            ->addOption('type', null, InputOption::VALUE_REQUIRED, 'type to populate');
+            ->setName('app:etl:article')
+            ->setDescription('ETL for populate Elasticsearch from SQL');
         ;
     }
 
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->etl_article->indexAll($input->getOption('type'));
+        $this->etlArticle->indexAll();
 
         $output->writeln('<info>end of ETL</info>');
     }

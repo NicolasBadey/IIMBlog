@@ -4,7 +4,7 @@
     "require": {
         "php": "^7.2",
         "ext-iconv": "*",
-        "elasticsearch/elasticsearch": "^6.0",
+        "elasticsearch/elasticsearch": "^6.1",
         "sensio/framework-extra-bundle": "^5.1",
         "doctrine/doctrine-bundle": "^1.6.10",
         "doctrine/doctrine-migrations-bundle": "^1.3",

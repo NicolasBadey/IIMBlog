@@ -5,7 +5,7 @@ use App\Entity\Article;
 use App\Logger\ElasticsearchLogger;
 use Elasticsearch\ClientBuilder;
 
-class Transform
+class TransformArticle
 {
     public function transformArticles(array $articles) :array
     {

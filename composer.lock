@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b2966b92591840c070f880f87e413693",
+    "content-hash": "928f43b7fa9c3d109fb8bee9522c212f",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -4076,63 +4076,6 @@
                 "reflection"
             ],
             "time": "2019-02-23T15:17:42+00:00"
-        },
-        {
-            "name": "symfony/proxy-manager-bridge",
-            "version": "v4.2.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/proxy-manager-bridge.git",
-                "reference": "5c0a3b921fbd5d6ca6cfc9321e67ebb2a8727ac3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/proxy-manager-bridge/zipball/5c0a3b921fbd5d6ca6cfc9321e67ebb2a8727ac3",
-                "reference": "5c0a3b921fbd5d6ca6cfc9321e67ebb2a8727ac3",
-                "shasum": ""
-            },
-            "require": {
-                "ocramius/proxy-manager": "~2.1",
-                "php": "^7.1.3",
-                "symfony/dependency-injection": "~4.0"
-            },
-            "conflict": {
-                "zendframework/zend-eventmanager": "2.6.0"
-            },
-            "require-dev": {
-                "symfony/config": "~3.4|~4.0"
-            },
-            "type": "symfony-bridge",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.2-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Bridge\\ProxyManager\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony ProxyManager Bridge",
-            "homepage": "https://symfony.com",
-            "time": "2019-02-23T15:42:05+00:00"
         },
         {
             "name": "symfony/routing",

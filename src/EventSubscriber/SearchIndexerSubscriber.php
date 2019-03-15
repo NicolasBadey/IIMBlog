@@ -1,12 +1,12 @@
 <?php
-namespace App\EventListener;
+namespace App\EventSubscriber;
 
 use App\Entity\Article;
 use App\Model\ETL\ETLArticle;
-use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class SearchIndexerSubscriber implements EventSubscriber
+class SearchIndexerSubscriber implements EventSubscriberInterface
 {
     /**
      * @var ETLArticle
@@ -24,7 +24,7 @@ class SearchIndexerSubscriber implements EventSubscriber
         $this->etl_article = $etl_article;
     }
 
-    public function getSubscribedEvents()
+    public static function getSubscribedEvents()
     {
         return [
             'postPersist',

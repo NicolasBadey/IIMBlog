@@ -2,70 +2,61 @@
 namespace App\Model\ETL;
 
 use App\Entity\Article;
-use App\Model\ClientElasticSearch;
 use App\Repository\ArticleRepository;
 
-class ETLArticle extends AbstractETL
+class ETLArticle
 {
     /**
-     * @var ClientElasticSearch
+     * @var LoadArticle
      */
-    protected $client;
+    protected $loadArticle;
 
     /**
-     * @var ArticleRepository
+     * @var ExtractArticle
      */
-    protected $articleRepository;
+    protected $extractArticle;
 
     /**
-     * @var Transform
+     * @var TransformArticle
      */
     protected $transform;
 
     /**
-     * ETLCommand constructor.
-     * @param ClientElasticSearch $client
+     * ETLArticle constructor.
+     * @param LoadArticle $loadArticle
+     * @param ExtractArticle $extractArticle
+     * @param TransformArticle $transform
      */
-    public function __construct(ClientElasticSearch $client, ArticleRepository $articleRepository, Transform $transform)
+    public function __construct(LoadArticle $loadArticle, ExtractArticle $extractArticle, TransformArticle $transform)
     {
-        $this->client = $client;
-        $this->articleRepository = $articleRepository;
+        $this->loadArticle = $loadArticle;
+        $this->extractArticle = $extractArticle;
         $this->transform = $transform;
     }
 
-    public function indexAll(string $type)
+    public function indexAll()
     {
-        $aliase = $this->client->getIndex();
-        $index = $aliase.'_'.(new \DateTime())->format('U');
+        $this->loadArticle->preLoad();
 
-        //create Index
-        $this->client->indices()->create([
-            'index' => $index
-        ]);
-
-        //update mapping
-        $this->client->indices()->putMapping($this->getMapping($index, $type));
-
-        //Extract : make a Class Model if it become more complex
-        $articlesORM = $this->articleRepository->findAll();
+        //Extract
+        $articlesEntities = $this->extractArticle->getEntities();
 
         //Transform
-        $articlesTransformed = $this->transform->transformArticles($articlesORM);
+        $articlesTransformed = $this->transform->transformArticles($articlesEntities);
 
         //Load
-        $this->client->bulk($articlesTransformed, $index, $type);
+        $this->loadArticle->bulkLoad($articlesTransformed);
 
-        //invert aliase
-        $this->invertAliase($index, $aliase);
-
-        //delete unused indices
-        $this->deleteUnusedIndices($index, $aliase);
+        $this->loadArticle->postLoad();
     }
 
+    /**
+     * @param Article $article
+     */
     public function indexOne(Article $article)
     {
         $articleTransformed = $this->transform->transformArticle($article);
 
-        $this->client->index($articleTransformed, $this->client->getIndex());
+        $this->loadArticle->singleLoad($articleTransformed);
     }
 }

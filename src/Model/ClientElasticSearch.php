@@ -14,11 +14,6 @@ class ClientElasticSearch
      * @var ElasticsearchLogger
      */
     private $logger;
-    /**
-     * @var string
-     */
-    private $index;
-
 
     /**
      * Client constructor.
@@ -27,7 +22,6 @@ class ClientElasticSearch
      */
     public function __construct(array $elasticsearch_config, ElasticsearchLogger $logger)
     {
-        $this->index = $elasticsearch_config['index'];
         $this->logger = $logger;
         $this->client = ClientBuilder::create()
             ->setHosts($elasticsearch_config['hosts'])
@@ -36,20 +30,12 @@ class ClientElasticSearch
     }
 
     /**
-     * @return string
-     */
-    public function getIndex(): string
-    {
-        return $this->index;
-    }
-
-    /**
      * @param $params
      * @return array
      */
-    public function index(array $params, string $type): array
+    public function index(array $params, string $index, string $type): array
     {
-        $paramsIndex = $this->prepareForIndex($params, $type);
+        $paramsIndex = $this->prepareForIndex($params,$index, $type);
 
         $data = $this->client->index($paramsIndex);
         $this->logRequestInfo();
@@ -104,10 +90,10 @@ class ClientElasticSearch
         return $paramsIndex;
     }
 
-    public function prepareForIndex(array $param, string $type): array
+    public function prepareForIndex(array $param,string $index, string $type): array
     {
         $paramIndex= [
-            'index' => $this->index,
+            'index' => $index,
             'type' => $type,
             'id' => $param['id'],
         ];
