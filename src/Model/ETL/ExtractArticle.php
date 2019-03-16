@@ -2,7 +2,6 @@
 
 namespace App\Model\ETL;
 
-
 use App\Repository\ArticleRepository;
 
 class ExtractArticle

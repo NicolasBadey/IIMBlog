@@ -2,7 +2,6 @@
 
 namespace App\Model\ETL;
 
-
 use App\Model\ClientElasticSearch;
 use Symfony\Component\Validator\Mapping\Loader\AbstractLoader;
 

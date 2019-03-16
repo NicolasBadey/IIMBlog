@@ -2,7 +2,6 @@
 
 namespace App\Model\ETL;
 
-
 use App\Model\ClientElasticSearch;
 
 abstract class AbstractLoad
@@ -19,9 +18,9 @@ abstract class AbstractLoad
         $this->client = $client;
     }
 
-    abstract function getMappingProperties();
+    abstract public function getMappingProperties();
     
-    abstract function getAlias();
+    abstract public function getAlias();
 
     protected function getMapping() :array
     {
@@ -104,13 +103,11 @@ abstract class AbstractLoad
 
     public function bulkLoad(array $data)
     {
-
         return $this->client->bulk($data, $this->getIndex(), $this->getAlias());
     }
 
     public function singleLoad(array $data)
     {
-
         return $this->client->index($data, $this->getAlias(), $this->getAlias());
     }
 }

@@ -35,7 +35,7 @@ class ClientElasticSearch
      */
     public function index(array $params, string $index, string $type): array
     {
-        $paramsIndex = $this->prepareForIndex($params,$index, $type);
+        $paramsIndex = $this->prepareForIndex($params, $index, $type);
 
         $data = $this->client->index($paramsIndex);
         $this->logRequestInfo();
@@ -90,7 +90,7 @@ class ClientElasticSearch
         return $paramsIndex;
     }
 
-    public function prepareForIndex(array $param,string $index, string $type): array
+    public function prepareForIndex(array $param, string $index, string $type): array
     {
         $paramIndex= [
             'index' => $index,
