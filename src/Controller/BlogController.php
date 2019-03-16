@@ -30,20 +30,19 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("/article/search/{search}", name="front_article_search")
+     * @Route("/article/search", name="front_article_search")
      */
-    public function article($search)
+    public function article(Request $request)
     {
 
         //https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-multi-match-query.html
 
         $params = [
-            'index' => $this->client->getIndex(),
-            'type' => 'doc',
+            'index' => 'article',
             'body' => [
                 'query' => [
                     'multi_match' => [
-                        'query' =>    $search,
+                        'query' => $request->get('search', ''),
                         'fields' => [
                             'title^3',
                             'content'
@@ -57,38 +56,40 @@ class BlogController extends AbstractController
             ]
         ];
 
-
-        $params = [
-            'index' => $this->client->getIndex(),
-            'type' => 'doc',
-            'body' => [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            'multi_match' => [
-                                'query' =>    $search,
-                                'fields' => [
-                                    'title^3',
-                                    'content'
+        /*
+                $params = [
+                    'index' => 'article',
+                    'type' => 'doc',
+                    'body' => [
+                        'query' => [
+                            'bool' => [
+                                'must' => [
+                                    'multi_match' => [
+                                        'query' =>    $search,
+                                        'fields' => [
+                                            'title^3',
+                                            'content'
+                                        ],
+                                        'minimum_should_match' => '50%',
+                                        'type' => 'most_fields',
+                                        'fuzziness' => 'AUTO',
+                                        //'operator' => 'and', //look at cross_fields type before use operator "and"
+                                    ]
                                 ],
-                                'minimum_should_match' => '50%',
-                                'type' => 'most_fields',
-                                'fuzziness' => 'AUTO',
-                                //'operator' => 'and', //look at cross_fields type before use operator "and"
+        
+                                // complete geo-location distance here with :
+                                // https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html#_lat_lon_as_properties_3
                             ]
-                        ],
-
-                        // complete geo-location distance here with :
-                        // https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html#_lat_lon_as_properties_3
+                        ]
                     ]
-                ]
-            ]
-        ];
-
+                ];
+        */
 
         $result = $this->client->search($params);
 
-        return new JsonResponse($result);
+        return $this->render('blog/article.html.twig', [
+            'articles' => $result['hits']['hits'],
+        ]);
     }
 
     /**

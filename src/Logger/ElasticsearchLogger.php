@@ -1,6 +1,7 @@
 <?php
 namespace App\Logger;
 
+use Elasticsearch\Connections\ConnectionInterface;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 
@@ -10,15 +11,19 @@ class ElasticsearchLogger extends AbstractLogger
      * @var LoggerInterface
      */
     protected $logger;
+    
     /**
      * @var array
      */
     protected $queries = [];
+
     /**
      * @var bool
      */
     protected $debug;
+
     protected $queryLogs = [];
+
     /**
      * Constructor.
      *
@@ -30,22 +35,15 @@ class ElasticsearchLogger extends AbstractLogger
         $this->logger = $logger;
         $this->debug = $debug;
     }
+
     /**
-     * Logs a query.
-     *
-     * @param string $path       Path to call
-     * @param string $method     Rest method to use (GET, POST, DELETE, PUT)
-     * @param array|string $data Arguments
-     * @param float  $queryTime  Execution time (in seconds)
-     * @param array  $connection Host, port, transport, and headers of the query
-     * @param array  $query      Arguments
-     * @param int    $engineTime
-     * @param int    $itemCount
+     * @param array $requestInfo
+     * @param ConnectionInterface $connection
      */
-    public function logQuery($path, $method, $data, $queryTime, $connection = [], $query = [], $engineTime = 0, $itemCount = 0)
+    public function logQuery(array $requestInfo)
     {
-        $executionMS = $queryTime * 1000;
         if ($this->debug) {
+            $data = $requestInfo['request']['body'];
             $e = new \Exception();
             if (is_string($data)) {
                 $jsonStrings = explode("\n", $data);
@@ -58,19 +56,22 @@ class ElasticsearchLogger extends AbstractLogger
             } else {
                 $data = [$data];
             }
+
+            $result = json_decode($requestInfo['response']['body'], true);
             $this->queries[] = [
-                'path' => $path,
-                'method' => $method,
+                'url' => $requestInfo['response']['transfer_stats']['url'],
+                'scheme' => $requestInfo['request']['scheme'],
+                'method' => $requestInfo['request']['http_method'],
                 'data' => $data,
-                'executionMS' => $executionMS,
-                'engineMS' => $engineTime,
-                'connection' => $connection,
-                'queryString' => $query,
-                'itemCount' => $itemCount,
+                'status' => $requestInfo['response']['status'],
+                'executionMS' => $requestInfo['response']['transfer_stats']['total_time'] * 1000,
+                'queryString' => 'toto',
+                'itemCount' => $result['hits']['total'] ?? '',
                 'backtrace' => $e->getTraceAsString(),
             ];
         }
     }
+
     /**
      * Returns the number of queries that have been logged.
      *
@@ -80,6 +81,7 @@ class ElasticsearchLogger extends AbstractLogger
     {
         return count($this->queries);
     }
+
     /**
      * Returns a human-readable array of queries logged.
      *
@@ -89,13 +91,15 @@ class ElasticsearchLogger extends AbstractLogger
     {
         return $this->queries;
     }
+
     /**
      * {@inheritdoc}
      */
     public function log($level, $message, array $context = [])
     {
-        return $this->logger->log($level, $message, $context);
+        $this->logger->log($level, $message, $context);
     }
+
     public function reset()
     {
         $this->queries = [];

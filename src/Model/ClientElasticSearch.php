@@ -143,20 +143,7 @@ class ClientElasticSearch
 
     private function logRequestInfo()
     {
-        $info = $this->client->transport->getConnection()->getLastRequestInfo();
-
-        $this->logger->logQuery(
-            $info['request']['uri'],
-            $info['request']['http_method'],
-            $info['request']['body'],
-            $info['response']['transfer_stats']['total_time'],
-            [
-                'method' => $info['request']['scheme'],
-                'transport' => $info['request']['scheme'],
-                'host' => explode(':', $this->client->transport->getConnection()->getHost())[0],
-                'port' => '',
-            ]
-        );
+        $this->logger->logQuery($this->client->transport->getConnection()->getLastRequestInfo());
     }
 
     /**
