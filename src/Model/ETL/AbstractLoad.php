@@ -10,8 +10,13 @@ abstract class AbstractLoad
      * @var ClientElasticSearch
      */
     protected $client;
-    
-    protected $index;
+
+    /**
+     * @var string
+     *
+     * Index Name
+     */
+    private $index;
 
     public function __construct(ClientElasticSearch $client)
     {
@@ -20,7 +25,12 @@ abstract class AbstractLoad
 
     abstract public function getMappingProperties();
     
-    abstract public function getAlias();
+    abstract public function getAliasName();
+
+    public function getAlias(){
+
+        return $this->getAliasName().'_'.strtolower($_SERVER['APP_ENV']);
+    }
 
     protected function getMapping() :array
     {
@@ -101,13 +111,26 @@ abstract class AbstractLoad
         $this->deleteUnusedIndices();
     }
 
-    public function bulkLoad(array $data)
+    public function bulkLoad(array $data, string $index)
     {
-        return $this->client->bulk($data, $this->getIndex(), $this->getAlias());
+
+        return $this->client->bulk($data, $index, $this->getAlias());
     }
 
-    public function singleLoad(array $data)
+    public function singleLoad(array $data, string $index)
     {
-        return $this->client->index($data, $this->getAlias(), $this->getAlias());
+
+        return $this->client->index($data, $index, $this->getAlias());
+    }
+
+    /**
+     * @return bool
+     */
+    public function aliasExists()
+    {
+
+        return $this->client->indices()->existsAlias([
+            'name' => $this->getAlias()
+        ]);
     }
 }

@@ -1,4 +1,4 @@
-.PHONY:fixtures etl csfixer test
+.PHONY:fixtures etl csfixer test test-v
 
 fixtures:
 	bin/console hautelook:fixtures:load
@@ -10,8 +10,11 @@ csfixer:
 	php php-cs-fixer fix src/
 	php php-cs-fixer fix tests/
 
+test-v:
+	PANTHER_NO_HEADLESS=1 ./vendor/bin/simple-phpunit
+
 test:
-	./bin/phpunit
+	./vendor/bin/simple-phpunit
 
 localup:
 	php -S 127.0.0.1:8000 -t public &

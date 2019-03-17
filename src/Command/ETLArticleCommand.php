@@ -4,6 +4,7 @@ namespace App\Command;
 use App\Model\ETL\ETLArticle;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ETLArticleCommand extends Command
@@ -30,13 +31,22 @@ class ETLArticleCommand extends Command
     {
         $this
             ->setName('app:etl:article')
-            ->setDescription('ETL for populate Elasticsearch from SQL');
+            ->setDescription('ETL for populate Elasticsearch from SQL')
+            ->addOption(
+                'alias',
+                'a',
+                InputOption::VALUE_OPTIONAL,
+                'alias or not',
+                1
+            );
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->etlArticle->indexAll();
+        $alias = $input->getOption('alias') === null ? true : (bool) $input->getOption('alias');
+
+        $this->etlArticle->indexAll($alias);
 
         $output->writeln('<info>end of ETL</info>');
     }

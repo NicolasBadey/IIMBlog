@@ -32,6 +32,11 @@ class User implements UserInterface, \Serializable
     private $password;
 
     /**
+     * not mapped
+     */
+    private $plainPassword;
+
+    /**
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
@@ -111,6 +116,24 @@ class User implements UserInterface, \Serializable
         $this->password = $password;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param mixed $plainPassword
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+    }
+
+
 
     /**
      * @param mixed $isActive

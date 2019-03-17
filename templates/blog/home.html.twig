@@ -2,4 +2,7 @@
 
 {% block body %}
 Welcome
+    {% if app.user %}
+        {{ app.user.username }}
+    {% endif %}
 {% endblock %}

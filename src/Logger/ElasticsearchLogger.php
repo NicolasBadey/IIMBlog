@@ -17,11 +17,6 @@ class ElasticsearchLogger extends AbstractLogger
      */
     protected $queries = [];
 
-    /**
-     * @var bool
-     */
-    protected $debug;
-
     protected $queryLogs = [];
 
     /**
@@ -30,10 +25,9 @@ class ElasticsearchLogger extends AbstractLogger
      * @param LoggerInterface|null $logger The Symfony logger
      * @param bool                 $debug
      */
-    public function __construct(LoggerInterface $logger = null, $debug = false)
+    public function __construct(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
-        $this->debug = $debug;
     }
 
     /**
@@ -42,7 +36,7 @@ class ElasticsearchLogger extends AbstractLogger
      */
     public function logQuery(array $requestInfo)
     {
-        if ($this->debug) {
+        if ($_SERVER['APP_DEBUG']) {
             $data = $requestInfo['request']['body'];
             $e = new \Exception();
             if (is_string($data)) {

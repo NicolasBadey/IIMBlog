@@ -34,7 +34,7 @@ class ETLArticle
         $this->transform = $transform;
     }
 
-    public function indexAll()
+    public function indexAll(bool $alias = true)
     {
         $this->loadArticle->preLoad();
 
@@ -44,8 +44,11 @@ class ETLArticle
         //Transform
         $articlesTransformed = $this->transform->transformArticles($articlesEntities);
 
+        //without Alias, the alias name become the index name
+        $index = $alias ? $this->loadArticle->getIndex():$this->loadArticle->getAlias();
+
         //Load
-        $this->loadArticle->bulkLoad($articlesTransformed);
+        $this->loadArticle->bulkLoad($articlesTransformed, $index);
 
         $this->loadArticle->postLoad();
     }
@@ -57,6 +60,16 @@ class ETLArticle
     {
         $articleTransformed = $this->transform->transformArticle($article);
 
-        $this->loadArticle->singleLoad($articleTransformed);
+        if ($this->loadArticle->aliasExists()) {
+            $this->loadArticle->singleLoad($articleTransformed, $this->loadArticle->getAlias());
+        } else {
+            $this->loadArticle->preLoad();
+
+            $this->loadArticle->singleLoad($articleTransformed, $this->loadArticle->getIndex());
+
+            $this->loadArticle->postLoad();
+        }
+
+
     }
 }

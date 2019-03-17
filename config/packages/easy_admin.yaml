@@ -10,4 +10,10 @@ easy_admin:
         Category:
           class: App\Entity\Category
         User:
+          form:
+            fields:
+                - { property: 'username', type: 'email'  }
+                - { property: 'plainPassword', type: 'text' }
+                - { property: 'roles', type: 'App\Form\RolesChoiceType' }
+                - { property: 'isActive' }
           class: App\Entity\User

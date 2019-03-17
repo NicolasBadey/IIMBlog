@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Mapping\Loader\AbstractLoader;
 
 class LoadArticle extends AbstractLoad
 {
-    public function getAlias()
+    public function getAliasName()
     {
         return 'article';
     }

@@ -20,7 +20,7 @@ services:
                             # The best practice is to be explicit about your dependencies anyway.
         bind:
           $elasticsearch_config: '%elasticsearch%'
-          $debug: '%kernel.debug%'
+          $roles: '%security.role_hierarchy.roles%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -34,15 +34,16 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous o
-
-    App\EventListener\ArticleListener:
+    App\EventSubscriber\:
+        resource: '../src/EventSubscriber'
         tags:
-            - { name: doctrine.event_listener, event: preUpdate }
+            - { name: doctrine.event_subscriber, connection: default }
 
     App\DataCollector\ElasticsearchDataCollector:
         arguments:
            - "@App\\Logger\\ElasticsearchLogger"
         tags:
            - { name: data_collector, template: 'Collector/elasticsearch.html.twig', id: 'app.elasticsearch_data_collector' }
+
+    App\Model\ETL\ETLArticle:
+            lazy:  true
