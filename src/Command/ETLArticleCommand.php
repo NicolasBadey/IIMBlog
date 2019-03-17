@@ -46,8 +46,6 @@ class ETLArticleCommand extends Command
     {
         $alias = $input->getOption('alias') === null ? true : (bool) $input->getOption('alias');
 
-        $this->etlArticle->indexAll($alias);
-
-        $output->writeln('<info>end of ETL</info>');
+        $this->etlArticle->indexAll($alias,$output);
     }
 }

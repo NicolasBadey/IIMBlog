@@ -12,6 +12,7 @@
         "friendsofsymfony/ckeditor-bundle": "^2.0",
         "hautelook/alice-bundle": "^2.3",
         "helios-ag/fm-elfinder-bundle": "^9.2",
+        "pagerfanta/pagerfanta": "^2.1",
         "phpspec/prophecy": "^1.8",
         "phpunit/phpunit": "~8",
         "sensio/framework-extra-bundle": "^5.1",

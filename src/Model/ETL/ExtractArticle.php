@@ -3,6 +3,7 @@
 namespace App\Model\ETL;
 
 use App\Repository\ArticleRepository;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
 
 class ExtractArticle
 {
@@ -23,8 +24,8 @@ class ExtractArticle
     /**
      * @return array
      */
-    public function getEntities(): array
+    public function getAdapter(): DoctrineORMAdapter
     {
-        return $this->articleRepository->findAll();
+        return new DoctrineORMAdapter($this->articleRepository->getSearchQueryBuilder());
     }
 }

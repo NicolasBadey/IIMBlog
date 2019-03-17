@@ -3,6 +3,7 @@ namespace App\Model\ETL;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
+use Pagerfanta\Pagerfanta;
 
 class ETLArticle
 {
@@ -34,23 +35,43 @@ class ETLArticle
         $this->transform = $transform;
     }
 
-    public function indexAll(bool $alias = true)
+    public function indexAll(bool $alias = true, $output = null)
     {
         $this->loadArticle->preLoad();
 
         //Extract
-        $articlesEntities = $this->extractArticle->getEntities();
+        $adapter = $this->extractArticle->getAdapter();
 
-        //Transform
-        $articlesTransformed = $this->transform->transformArticles($articlesEntities);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(500);
+        $nbPages = $pagerfanta->getNbPages();
 
-        //without Alias, the alias name become the index name
-        $index = $alias ? $this->loadArticle->getIndex():$this->loadArticle->getAlias();
+        for ($page = 1 ; $page <= $nbPages ;$page++) {
+            $pagerfanta->setCurrentPage($page);
 
-        //Load
-        $this->loadArticle->bulkLoad($articlesTransformed, $index);
+            /**
+             * @var $articlesEntities \ArrayIterator
+             */
+            $articlesEntities = $pagerfanta->getCurrentPageResults();
+
+            //Transform
+            $articlesTransformed = $this->transform->transformArticles($articlesEntities->getArrayCopy());
+            $articlesEntities = null;
+
+            //Load
+            $this->loadArticle->bulkLoad($articlesTransformed, $alias);
+
+            if (null !== $output) {
+                $output->write('.');
+            }
+        }
 
         $this->loadArticle->postLoad();
+
+        if (null !== $output) {
+            $output->writeln('');
+            $output->writeln($pagerfanta->getNbResults().' documents indexed');
+        }
     }
 
     /**
@@ -60,16 +81,6 @@ class ETLArticle
     {
         $articleTransformed = $this->transform->transformArticle($article);
 
-        if ($this->loadArticle->aliasExists()) {
-            $this->loadArticle->singleLoad($articleTransformed, $this->loadArticle->getAlias());
-        } else {
-            $this->loadArticle->preLoad();
-
-            $this->loadArticle->singleLoad($articleTransformed, $this->loadArticle->getIndex());
-
-            $this->loadArticle->postLoad();
-        }
-
-
+        $this->loadArticle->singleLoad($articleTransformed);
     }
 }

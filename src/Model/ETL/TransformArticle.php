@@ -4,10 +4,11 @@ namespace App\Model\ETL;
 use App\Entity\Article;
 use App\Logger\ElasticsearchLogger;
 use Elasticsearch\ClientBuilder;
+use phpDocumentor\Reflection\Types\Iterable_;
 
 class TransformArticle
 {
-    public function transformArticles(array $articles) :array
+    public function transformArticles($articles) :array
     {
         return array_map([
             $this, 'transformArticle'

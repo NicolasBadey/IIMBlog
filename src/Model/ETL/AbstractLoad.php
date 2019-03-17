@@ -111,16 +111,25 @@ abstract class AbstractLoad
         $this->deleteUnusedIndices();
     }
 
-    public function bulkLoad(array $data, string $index)
+    public function bulkLoad(array $data, bool $alias)
     {
+        $index = $alias ? $this->getIndex():$this->getAlias();
 
         return $this->client->bulk($data, $index, $this->getAlias());
     }
 
-    public function singleLoad(array $data, string $index)
+    public function singleLoad(array $data)
     {
 
-        return $this->client->index($data, $index, $this->getAlias());
+        if ($this->aliasExists()) {
+            $this->client->index($data, $this->getAlias(), $this->getAlias());
+        } else {
+            $this->preLoad();
+
+            $this->client->index($data, $this->getIndex(), $this->getAlias());
+
+            $this->postLoad();
+        }
     }
 
     /**
