@@ -30,6 +30,14 @@ class BlogController extends AbstractController
     }
 
     /**
+     * @Route("/", name="home")
+     */
+    public function home(Request $request)
+    {
+        return $this->render('blog/home.html.twig');
+    }
+
+    /**
      * @Route("/article/search", name="front_article_search")
      */
     public function article(Request $request)
@@ -76,7 +84,7 @@ class BlogController extends AbstractController
                                         //'operator' => 'and', //look at cross_fields type before use operator "and"
                                     ]
                                 ],
-        
+
                                 // complete geo-location distance here with :
                                 // https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html#_lat_lon_as_properties_3
                             ]

@@ -1,0 +1,13 @@
+easy_admin:
+    entities:
+        Article:
+            class: App\Entity\Article
+            form:
+                fields:
+                    - { property: 'title' }
+                    - { property: 'content', type: 'fos_ckeditor' }
+                    - { property: 'category' }
+        Category:
+          class: App\Entity\Category
+        User:
+          class: App\Entity\User
