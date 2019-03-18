@@ -3,7 +3,9 @@ namespace App\EventSubscriber;
 
 use App\Entity\Article;
 use App\Model\ClientElasticSearch;
-use App\Model\ETL\ETLArticle;
+use App\Model\ETL\Article\ETLBuilder;
+use App\Model\ETL\Article\Load;
+use App\Model\ETL\ETL;
 use App\Model\ETL\LoadArticle;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
@@ -12,9 +14,9 @@ use Doctrine\Common\EventSubscriber;
 class SearchIndexerSubscriber implements EventSubscriber
 {
     /**
-     * @var ETLArticle
+     * @var ETLBuilder
      */
-    protected $etlArticle;
+    protected $ETLBuilder;
 
     /**
      * @var ClientElasticSearch
@@ -22,9 +24,9 @@ class SearchIndexerSubscriber implements EventSubscriber
     protected $clientElasticSearch;
 
 
-    public function __construct(ETLArticle $etlArticle, ClientElasticSearch $clientElasticSearch)
+    public function __construct(ETLBuilder $articleETLBuilder, ClientElasticSearch $clientElasticSearch)
     {
-        $this->etlArticle = $etlArticle;
+        $this->ETLBuilder = $articleETLBuilder;
         $this->clientElasticSearch = $clientElasticSearch;
     }
 
@@ -53,7 +55,7 @@ class SearchIndexerSubscriber implements EventSubscriber
 
         if ($entity instanceof Article) {
             $this->clientElasticSearch->delete([
-                'index' => LoadArticle::getAlias(),
+                'index' => Load::getAlias(),
                 'id' => $entity->getId()
             ]);
         }
@@ -64,7 +66,7 @@ class SearchIndexerSubscriber implements EventSubscriber
         $entity = $args->getObject();
 
         if ($entity instanceof Article) {
-            $this->etlArticle->indexOne($entity);
+            $this->ETLBuilder->build()->indexOne($entity);
         }
     }
 }

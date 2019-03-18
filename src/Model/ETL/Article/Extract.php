@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Model\ETL;
+namespace App\Model\ETL\Article;
 
+use App\Model\ETL\ExtractInterface;
 use App\Repository\ArticleRepository;
+use Pagerfanta\Adapter\AdapterInterface;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 
-class ExtractArticle
+class Extract implements ExtractInterface
 {
     /**
      * @var ArticleRepository
@@ -22,9 +24,10 @@ class ExtractArticle
     }
 
     /**
-     * @return array
+     * @param array $ids
+     * @return AdapterInterface
      */
-    public function getAdapter(array $ids): DoctrineORMAdapter
+    public function getAdapter(array $ids): AdapterInterface
     {
         return new DoctrineORMAdapter($this->articleRepository->getSearchQueryBuilder($ids));
     }

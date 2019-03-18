@@ -1,57 +1,20 @@
 <?php
 namespace App\Command;
 
-use App\Model\ETL\ETLArticle;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
+use App\Model\ETL\AbstractETLCommand;
+use App\Model\ETL\Article\ETLBuilder;
 
-class ETLArticleCommand extends Command
+class ETLArticleCommand extends AbstractETLCommand
 {
 
     /**
-     * @var ETLArticle
+     * ETLArticleCommand constructor.
+     * @param ETLBuilder $ETLArticleBuilder
      */
-    protected $etlArticle;
-
-    /**
-     * ETLCommand constructor.
-     * @param ETLArticle $etl_article
-     */
-    public function __construct(ETLArticle $etlArticle)
+    public function __construct(ETLBuilder $ETLArticleBuilder)
     {
-        parent::__construct();
+        parent::__construct('app:etl:article');
 
-        $this->etlArticle = $etlArticle;
-    }
-
-
-    protected function configure()
-    {
-        $this
-            ->setName('app:etl:article')
-            ->setDescription('ETL for populate Elasticsearch from SQL')
-            ->addOption(
-                'live',
-                'a',
-                InputOption::VALUE_OPTIONAL,
-                'live or not',
-                1
-            )->addArgument(
-                'ids',
-                InputArgument::OPTIONAL,
-                'specifics Ids to populate'
-            );
-        ;
-    }
-
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-        $live = $input->getOption('live') === null ? true : (bool) $input->getOption('live');
-        $ids = explode(',', $input->getArgument('ids'));
-
-        $this->etlArticle->indexAll($ids, $live, $output);
+        $this->ETLBuilder = $ETLArticleBuilder;
     }
 }

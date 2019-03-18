@@ -33,7 +33,7 @@ abstract class AbstractLoad
     }
 
     abstract public function getMappingProperties();
-    
+
     abstract public static function getAlias();
 
     protected function getMapping() :array
@@ -91,7 +91,7 @@ abstract class AbstractLoad
         }
     }
 
-    public function setLiveMode(bool $live)
+    public function setLiveMode(bool $live): void
     {
         $this->live = $live;
     }
@@ -118,7 +118,7 @@ abstract class AbstractLoad
         return $this->index;
     }
 
-    public function preLoad()
+    public function preLoad(): void
     {
         if (true === $this->live && true === $this->aliasExists()) {
             //in this case we ask to populate the live index and he already exists, nothing to do
@@ -138,7 +138,7 @@ abstract class AbstractLoad
         }
     }
 
-    public function postLoad()
+    public function postLoad(): void
     {
         if (true === $this->live) {
             //in this case we ask to populate the live index and he already exists, nothing to do
@@ -149,22 +149,24 @@ abstract class AbstractLoad
         $this->deleteUnusedIndices();
     }
 
-    public function bulkLoad(array $data)
+    public function bulkLoad(array $data): array
     {
         return $this->client->bulk($data, $this->getIndex(), static::getAlias());
     }
 
-    public function singleLoad(array $data)
+    public function singleLoad(array $data): array
     {
         if ($this->aliasExists()) {
-            $this->client->index($data, static::getAlias(), static::getAlias());
+            $response = $this->client->index($data, static::getAlias(), static::getAlias());
         } else {
             $this->preLoad();
 
-            $this->client->index($data, $this->getIndex(), static::getAlias());
+            $response = $this->client->index($data, $this->getIndex(), static::getAlias());
 
             $this->postLoad();
         }
+
+        return $response;
     }
 
     /**

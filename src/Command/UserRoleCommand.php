@@ -2,7 +2,7 @@
 namespace App\Command;
 
 use App\Entity\User;
-use App\Model\ETL\ETLArticle;
+use App\Model\ETL\ETL;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;

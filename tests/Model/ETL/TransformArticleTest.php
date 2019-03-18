@@ -36,7 +36,7 @@ class TransformArticleTest extends KernelTestCase
         self::bootKernel();
         $container = self::$container;
 
-        $articleArray = $container->get('App\Model\ETL\TransformArticle')->transformArticles([$article->reveal()]);
+        $articleArray = $container->get('App\Model\ETL\Article\Transform')->transformObjects([$article->reveal()]);
 
         $this->assertEquals([
             [
