@@ -13,7 +13,7 @@ class ArticleETLBuilder extends AbstractETLBuilder
      * @param ArticleExtract $extract
      * @param ArticleTransform $transform
      */
-    public function __construct(ArticleLoad $load, ArticleExtract $extract, ArticleTransform $transform,EntityManagerInterface $em)
+    public function __construct(ArticleLoad $load, ArticleExtract $extract, ArticleTransform $transform, EntityManagerInterface $em)
     {
         $this->load = $load;
         $this->extract = $extract;
