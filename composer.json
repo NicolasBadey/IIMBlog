@@ -13,7 +13,6 @@
         "hautelook/alice-bundle": "^2.3",
         "helios-ag/fm-elfinder-bundle": "^9.2",
         "pagerfanta/pagerfanta": "^2.1",
-        "phpspec/prophecy": "^1.8",
         "phpunit/phpunit": "~8",
         "sensio/framework-extra-bundle": "^5.1",
         "sensiolabs/security-checker": "^5.0",
@@ -25,6 +24,7 @@
         "symfony/framework-bundle": "*",
         "symfony/intl": "*",
         "symfony/monolog-bundle": "^3.1",
+        "symfony/proxy-manager-bridge": "4.2.*",
         "symfony/security-bundle": "*",
         "symfony/swiftmailer-bundle": "^3.1",
         "symfony/translation": "*",
@@ -40,6 +40,7 @@
         "dama/doctrine-test-bundle": "^5.0",
         "doctrine/doctrine-fixtures-bundle": "^3.0",
         "friendsofphp/php-cs-fixer": "^2.12",
+        "phpspec/prophecy": "^1.8",
         "symfony/browser-kit": "*",
         "symfony/css-selector": "*",
         "symfony/debug-bundle": "*",
@@ -60,7 +61,7 @@
             "*": "dist"
         },
         "sort-packages": true,
-        "component-dir": "public/elfinder_assets"
+        "component-dir": "public/bundles"
     },
     "autoload": {
         "psr-4": {

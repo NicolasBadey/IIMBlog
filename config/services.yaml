@@ -38,6 +38,9 @@ services:
         resource: '../src/EventSubscriber'
         tags:
             - { name: doctrine.event_subscriber, connection: default }
+    App\Repository\:
+        resource: '../src/Repository'
+        lazy: true
 
     App\DataCollector\ElasticsearchDataCollector:
         arguments:
@@ -45,5 +48,3 @@ services:
         tags:
            - { name: data_collector, template: 'Collector/elasticsearch.html.twig', id: 'app.elasticsearch_data_collector' }
 
-    App\Model\ETL\ETLArticle:
-            lazy:  true

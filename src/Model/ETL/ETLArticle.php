@@ -35,8 +35,10 @@ class ETLArticle
         $this->transform = $transform;
     }
 
-    public function indexAll(bool $alias = true, $output = null)
+    public function indexAll(bool $live, $output = null)
     {
+        $this->loadArticle->setLiveMode($live);
+
         $this->loadArticle->preLoad();
 
         //Extract
@@ -59,7 +61,7 @@ class ETLArticle
             $articlesEntities = null;
 
             //Load
-            $this->loadArticle->bulkLoad($articlesTransformed, $alias);
+            $this->loadArticle->bulkLoad($articlesTransformed);
 
             if (null !== $output) {
                 $output->write('.');
@@ -69,8 +71,7 @@ class ETLArticle
         $this->loadArticle->postLoad();
 
         if (null !== $output) {
-            $output->writeln('');
-            $output->writeln($pagerfanta->getNbResults().' documents indexed');
+            $output->writeln("\n".$pagerfanta->getNbResults().' documents indexed');
         }
     }
 

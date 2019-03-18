@@ -18,6 +18,15 @@ abstract class AbstractLoad
      */
     private $index;
 
+    /**
+     * @var bool
+     *
+     * Live mode allow indexing directly in the current alias' index if exists or by create a new index with an alias
+     * The point is to show content as fast as possible without wait indexation's end
+     * Basically it's the panic button when ES server has been reset directly in prod or for update index without mapping and deletion changes
+     */
+    private $live;
+
     public function __construct(ClientElasticSearch $client)
     {
         $this->client = $client;
@@ -86,36 +95,67 @@ abstract class AbstractLoad
             }
         }
     }
+
+    public function setLiveMode(bool $live) {
+        $this->live = $live;
+    }
+
+    public function getIndexNameFromAlias(){
+        $aliaseInfo = $this->client->indices()->getAlias([
+            'name' => $this->getAlias()
+        ]);
+        return array_keys($aliaseInfo)[0];
+    }
     
     public function getIndex()
     {
         if (null === $this->index) {
-            $this->index = $this->getAlias().'_'.(new \DateTime())->format('U');
+            if ($this->live && $this->aliasExists()){
+                //in this case we want to populate current live index if already exists
+                $this->index = $this->getIndexNameFromAlias();
+            } else {
+                $this->index = $this->getAlias().'_'.(new \DateTime())->format('U');
+            }
         }
-        
+
         return $this->index;
     }
 
     public function preLoad()
     {
+        if (true === $this->live && true === $this->aliasExists()){
+            //in this case we ask to populate the live index and he already exists, nothing to do
+            return;
+        }
+
         $this->client->indices()->create([
             'index' => $this->getIndex()
         ]);
 
         $this->client->indices()->putMapping($this->getMapping());
+
+
+        if (true === $this->live){
+            //in this case we ask to populate the live index but he d'ont exists, so we create and link the alias directly
+            $this->invertAlias();
+        }
     }
 
     public function postLoad()
     {
+        if (true === $this->live){
+            //in this case we ask to populate the live index and he already exists, nothing to do
+            return;
+        }
+
         $this->invertAlias();
         $this->deleteUnusedIndices();
     }
 
-    public function bulkLoad(array $data, bool $alias)
+    public function bulkLoad(array $data)
     {
-        $index = $alias ? $this->getIndex():$this->getAlias();
 
-        return $this->client->bulk($data, $index, $this->getAlias());
+        return $this->client->bulk($data, $this->getIndex(), $this->getAlias());
     }
 
     public function singleLoad(array $data)
@@ -130,6 +170,15 @@ abstract class AbstractLoad
 
             $this->postLoad();
         }
+    }
+
+    public function deleteDocument(int $id): array
+    {
+        return $this->client->delete([
+            'index' => $this->getAlias(),
+            'type' => $this->getAlias(),
+            'id' => $id
+        ]);
     }
 
     /**

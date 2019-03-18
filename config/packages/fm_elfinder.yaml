@@ -1,5 +1,5 @@
 fm_elfinder:
-    assets_path: elfinder_assets
+    assets_path: bundles
     instances:
         default:
             editor: ckeditor

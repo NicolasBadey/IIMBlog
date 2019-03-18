@@ -3,6 +3,7 @@ namespace App\EventSubscriber;
 
 use App\Entity\Article;
 use App\Model\ETL\ETLArticle;
+use App\Model\ETL\LoadArticle;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\Common\EventSubscriber;
@@ -12,12 +13,18 @@ class SearchIndexerSubscriber implements EventSubscriber
     /**
      * @var ETLArticle
      */
-    protected $etl_article;
+    protected $etlArticle;
+
+    /**
+     * @var LoadArticle
+     */
+    protected $loadArticle;
 
 
-    public function __construct(ETLArticle $etl_article)
+    public function __construct(ETLArticle $etlArticle, LoadArticle $loadArticle)
     {
-        $this->etl_article = $etl_article;
+        $this->etlArticle = $etlArticle;
+        $this->loadArticle = $loadArticle;
     }
 
     public function getSubscribedEvents()
@@ -25,6 +32,7 @@ class SearchIndexerSubscriber implements EventSubscriber
         return [
             Events::postPersist,
             Events::postUpdate,
+            Events::postRemove,
         ];
     }
 
@@ -38,12 +46,21 @@ class SearchIndexerSubscriber implements EventSubscriber
         $this->index($args);
     }
 
+    public function postRemove(LifecycleEventArgs $args)
+    {
+        $entity = $args->getObject();
+
+        if ($entity instanceof Article) {
+            $this->loadArticle->deleteDocument($entity->getId());
+        }
+    }
+
     public function index(LifecycleEventArgs $args)
     {
         $entity = $args->getObject();
 
         if ($entity instanceof Article) {
-            $this->etl_article->indexOne($entity);
+            $this->etlArticle->indexOne($entity);
         }
     }
 }

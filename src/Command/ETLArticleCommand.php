@@ -33,10 +33,10 @@ class ETLArticleCommand extends Command
             ->setName('app:etl:article')
             ->setDescription('ETL for populate Elasticsearch from SQL')
             ->addOption(
-                'alias',
+                'live',
                 'a',
                 InputOption::VALUE_OPTIONAL,
-                'alias or not',
+                'live or not',
                 1
             );
         ;
@@ -44,8 +44,8 @@ class ETLArticleCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $alias = $input->getOption('alias') === null ? true : (bool) $input->getOption('alias');
+        $live = $input->getOption('live') === null ? true : (bool) $input->getOption('live');
 
-        $this->etlArticle->indexAll($alias,$output);
+        $this->etlArticle->indexAll($live,$output);
     }
 }
