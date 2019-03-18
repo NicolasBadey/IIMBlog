@@ -8,3 +8,4 @@ App\Entity\Article:
         latitude: '<latitude()>'
         longitude: '<longitude()>'
         category: '@category*'
+        isIndexable: false

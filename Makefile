@@ -1,10 +1,10 @@
 .PHONY:fixtures etl csfixer test test-v
 
 fixtures:
-	bin/console hautelook:fixtures:load
+	bin/console hautelook:fixtures:load --no-debug
 
 etl:
-	bin/console app:etl:article
+	bin/console app:etl:article --no-debug
 
 csfixer:
 	php php-cs-fixer fix src/

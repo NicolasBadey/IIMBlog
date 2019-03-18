@@ -63,8 +63,8 @@ class SearchIndexerSubscriber implements EventSubscriber
     {
         $entity = $args->getObject();
 
-        if ($entity instanceof Article) {
-            //$this->articleETLBuilder->build()->indexOne($entity);
+        if ($entity instanceof Article && true === $entity->isIndexable) {
+            $this->articleETLBuilder->build()->indexOne($entity);
         }
     }
 }
