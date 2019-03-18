@@ -13,7 +13,6 @@ class UserWorkflowTest extends PantherTestCase
         $crawler = $client->request('GET', '/');
 
         $this->assertStringContainsString('Welcom', $crawler->filter('main')->text());
-
     }
     public function testRegister()
     {
@@ -30,8 +29,6 @@ class UserWorkflowTest extends PantherTestCase
         $crawler = $client->submit($form);
 
         $this->assertStringContainsString('Welcome test@test.com', $crawler->filter('main')->text());
-
-
     }
 
     public function testlogout()

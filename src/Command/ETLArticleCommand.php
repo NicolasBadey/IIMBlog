@@ -46,6 +46,6 @@ class ETLArticleCommand extends Command
     {
         $live = $input->getOption('live') === null ? true : (bool) $input->getOption('live');
 
-        $this->etlArticle->indexAll($live,$output);
+        $this->etlArticle->indexAll($live, $output);
     }
 }

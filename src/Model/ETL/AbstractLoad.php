@@ -34,12 +34,7 @@ abstract class AbstractLoad
 
     abstract public function getMappingProperties();
     
-    abstract public function getAliasName();
-
-    public function getAlias(){
-
-        return $this->getAliasName().'_'.strtolower($_SERVER['APP_ENV']);
-    }
+    abstract public function getAlias();
 
     protected function getMapping() :array
     {
@@ -96,11 +91,13 @@ abstract class AbstractLoad
         }
     }
 
-    public function setLiveMode(bool $live) {
+    public function setLiveMode(bool $live)
+    {
         $this->live = $live;
     }
 
-    public function getIndexNameFromAlias(){
+    public function getIndexNameFromAlias()
+    {
         $aliaseInfo = $this->client->indices()->getAlias([
             'name' => $this->getAlias()
         ]);
@@ -110,7 +107,7 @@ abstract class AbstractLoad
     public function getIndex()
     {
         if (null === $this->index) {
-            if ($this->live && $this->aliasExists()){
+            if ($this->live && $this->aliasExists()) {
                 //in this case we want to populate current live index if already exists
                 $this->index = $this->getIndexNameFromAlias();
             } else {
@@ -123,7 +120,7 @@ abstract class AbstractLoad
 
     public function preLoad()
     {
-        if (true === $this->live && true === $this->aliasExists()){
+        if (true === $this->live && true === $this->aliasExists()) {
             //in this case we ask to populate the live index and he already exists, nothing to do
             return;
         }
@@ -135,7 +132,7 @@ abstract class AbstractLoad
         $this->client->indices()->putMapping($this->getMapping());
 
 
-        if (true === $this->live){
+        if (true === $this->live) {
             //in this case we ask to populate the live index but he d'ont exists, so we create and link the alias directly
             $this->invertAlias();
         }
@@ -143,7 +140,7 @@ abstract class AbstractLoad
 
     public function postLoad()
     {
-        if (true === $this->live){
+        if (true === $this->live) {
             //in this case we ask to populate the live index and he already exists, nothing to do
             return;
         }
@@ -154,13 +151,11 @@ abstract class AbstractLoad
 
     public function bulkLoad(array $data)
     {
-
         return $this->client->bulk($data, $this->getIndex(), $this->getAlias());
     }
 
     public function singleLoad(array $data)
     {
-
         if ($this->aliasExists()) {
             $this->client->index($data, $this->getAlias(), $this->getAlias());
         } else {
@@ -186,7 +181,6 @@ abstract class AbstractLoad
      */
     public function aliasExists()
     {
-
         return $this->client->indices()->existsAlias([
             'name' => $this->getAlias()
         ]);

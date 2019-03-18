@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Model\ClientElasticSearch;
 use App\Form\ArticleType;
+use App\Model\ETL\LoadArticle;
 use App\Model\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,10 +24,20 @@ class BlogController extends AbstractController
      */
     protected $client;
 
+    /**
+     * @var LoadArticle
+     */
+    protected $loadArticle;
 
-    public function __construct(ClientElasticSearch $client)
+    /**
+     * BlogController constructor.
+     * @param ClientElasticSearch $client
+     * @param LoadArticle $loadArticle
+     */
+    public function __construct(ClientElasticSearch $client, LoadArticle $loadArticle)
     {
         $this->client = $client;
+        $this->loadArticle = $loadArticle;
     }
 
     /**
@@ -46,7 +57,7 @@ class BlogController extends AbstractController
         //https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-multi-match-query.html
 
         $params = [
-            'index' => 'article',
+            'index' => $this->loadArticle->getAlias(),
             'body' => [
                 'query' => [
                     'multi_match' => [
