@@ -9,5 +9,5 @@ interface LoadInterface
     public function preLoad(): void;
     public function postLoad(): void;
     public function bulkLoad(array $data): array;
-    public function singleLoad(array $data): array;
+    public function singleLoad(array $data, bool $createIndexIdNotExists): array;
 }

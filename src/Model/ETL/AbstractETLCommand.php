@@ -1,7 +1,7 @@
 <?php
 namespace App\Model\ETL;
 
-use App\Model\ETL\Article\ETLBuilder;
+use App\Model\ETL\Article\ArticleETLBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,7 +12,7 @@ abstract class AbstractETLCommand extends Command
 {
 
     /**
-     * @var ETLBuilder
+     * @var ArticleETLBuilder
      */
     protected $ETLBuilder;
 

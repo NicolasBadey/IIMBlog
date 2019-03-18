@@ -4,8 +4,7 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Model\ClientElasticSearch;
 use App\Form\ArticleType;
-use App\Model\ETL\LoadArticle;
-use App\Model\Mailer;
+use App\Model\ETL\Article\ArticleLoad;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,7 +49,7 @@ class BlogController extends AbstractController
         //https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-multi-match-query.html
 
         $params = [
-            'index' => LoadArticle::getAlias(),
+            'index' => ArticleLoad::getAlias(),
             'body' => [
                 'query' => [
                     'multi_match' => [

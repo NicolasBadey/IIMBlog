@@ -2,6 +2,7 @@
 namespace App\Model\ETL;
 
 use App\Entity\Article;
+use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -17,6 +18,7 @@ class ETL
      * @var LoadInterface
      */
     protected $load;
+    public $em;
 
     /**
      * @var ExtractInterface
@@ -27,6 +29,13 @@ class ETL
      * @var TransformInterface
      */
     protected $transform;
+
+    /**
+     * @var int
+     *
+     * Be careful,with SQL Limit statement become time consuming after 500
+     */
+    protected $maxPerPAge = 500;
 
     /**
      * @param ExtractInterface $extract
@@ -70,6 +79,16 @@ class ETL
         return new self();
     }
 
+    /**
+     * @param int $maxPerPAge
+     */
+    public function setMaxPerPAge(int $maxPerPAge)
+    {
+        $this->maxPerPAge = $maxPerPAge;
+    }
+
+
+
 
     /**
      * @param OutputInterface $output
@@ -86,7 +105,7 @@ class ETL
         $adapter = $this->extract->getAdapter($ids);
 
         $pagerfanta = new Pagerfanta($adapter);
-        $pagerfanta->setMaxPerPage(500);
+        $pagerfanta->setMaxPerPage($this->maxPerPAge);
         $nbPages = $pagerfanta->getNbPages();
 
         if ($pagerfanta->getNbResults() === 0) {
@@ -105,12 +124,18 @@ class ETL
 
             //Transform
             $objectsTransformed = $this->transform->transformObjects($objects->getArrayCopy());
+
+            //memory optimisation
             $objects = null;
 
             //Load
             $this->load->bulkLoad($objectsTransformed);
 
+            $this->extract->purgeData();
+
             $output->write('.');
+
+            //echo round(memory_get_usage()/1000) . "\n";
         }
 
         $this->load->postLoad();
@@ -122,10 +147,10 @@ class ETL
      * @param $object
      * @return array
      */
-    public function indexOne($object): array
+    public function indexOne($object, bool $createIndexIdNotExists = true): array
     {
         $objectTransformed = $this->transform->transformObject($object);
 
-        return $this->load->singleLoad($objectTransformed);
+        return $this->load->singleLoad($objectTransformed, $createIndexIdNotExists);
     }
 }

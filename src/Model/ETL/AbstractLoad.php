@@ -154,19 +154,19 @@ abstract class AbstractLoad
         return $this->client->bulk($data, $this->getIndex(), static::getAlias());
     }
 
-    public function singleLoad(array $data): array
+    public function singleLoad(array $data, bool $createIndexIdNotExists): array
     {
         if ($this->aliasExists()) {
-            $response = $this->client->index($data, static::getAlias(), static::getAlias());
-        } else {
+            return $this->client->index($data, static::getAlias(), static::getAlias());
+        } elseif (true === $createIndexIdNotExists) {
             $this->preLoad();
 
             $response = $this->client->index($data, $this->getIndex(), static::getAlias());
 
             $this->postLoad();
-        }
 
-        return $response;
+            return $response;
+        }
     }
 
     /**

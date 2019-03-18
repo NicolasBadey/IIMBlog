@@ -7,7 +7,7 @@ use App\Model\ETL\AbstractLoad;
 use App\Model\ETL\LoadInterface;
 use Symfony\Component\Validator\Mapping\Loader\AbstractLoader;
 
-class Load extends AbstractLoad implements LoadInterface
+class ArticleLoad extends AbstractLoad implements LoadInterface
 {
     /**
      * @return string

@@ -5,7 +5,7 @@ use App\Entity\Article;
 use App\Model\ETL\AbstractTransform;
 use App\Model\ETL\TransformInterface;
 
-class Transform extends AbstractTransform implements TransformInterface
+class ArticleTransform extends AbstractTransform implements TransformInterface
 {
     /**
      * @param $article Article

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Model\ETL\Article\ArticleLoad;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Article
 {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -41,6 +43,13 @@ class Article
      * @ORM\ManyToOne(targetEntity="App\Entity\Category")
      */
     private $category;
+
+    public $isIndexable;
+
+    public function __construct()
+    {
+        $this->isIndexable = true;
+    }
 
     public function getId()
     {
@@ -114,4 +123,5 @@ class Article
 
         return $this;
     }
+
 }
