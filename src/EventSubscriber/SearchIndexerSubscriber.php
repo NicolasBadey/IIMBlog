@@ -2,6 +2,7 @@
 namespace App\EventSubscriber;
 
 use App\Entity\Article;
+use App\Model\ClientElasticSearch;
 use App\Model\ETL\ETLArticle;
 use App\Model\ETL\LoadArticle;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
@@ -16,15 +17,15 @@ class SearchIndexerSubscriber implements EventSubscriber
     protected $etlArticle;
 
     /**
-     * @var LoadArticle
+     * @var ClientElasticSearch
      */
-    protected $loadArticle;
+    protected $clientElasticSearch;
 
 
-    public function __construct(ETLArticle $etlArticle, LoadArticle $loadArticle)
+    public function __construct(ETLArticle $etlArticle, ClientElasticSearch $clientElasticSearch)
     {
         $this->etlArticle = $etlArticle;
-        $this->loadArticle = $loadArticle;
+        $this->clientElasticSearch = $clientElasticSearch;
     }
 
     public function getSubscribedEvents()
@@ -51,7 +52,10 @@ class SearchIndexerSubscriber implements EventSubscriber
         $entity = $args->getObject();
 
         if ($entity instanceof Article) {
-            $this->loadArticle->deleteDocument($entity->getId());
+            $this->clientElasticSearch->delete([
+                'index' => LoadArticle::getAlias(),
+                'id' => $entity->getId()
+            ]);
         }
     }
 

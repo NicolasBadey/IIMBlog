@@ -24,8 +24,8 @@ class ExtractArticle
     /**
      * @return array
      */
-    public function getAdapter(): DoctrineORMAdapter
+    public function getAdapter(array $ids): DoctrineORMAdapter
     {
-        return new DoctrineORMAdapter($this->articleRepository->getSearchQueryBuilder());
+        return new DoctrineORMAdapter($this->articleRepository->getSearchQueryBuilder($ids));
     }
 }

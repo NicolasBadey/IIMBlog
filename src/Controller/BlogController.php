@@ -25,19 +25,12 @@ class BlogController extends AbstractController
     protected $client;
 
     /**
-     * @var LoadArticle
-     */
-    protected $loadArticle;
-
-    /**
      * BlogController constructor.
      * @param ClientElasticSearch $client
-     * @param LoadArticle $loadArticle
      */
-    public function __construct(ClientElasticSearch $client, LoadArticle $loadArticle)
+    public function __construct(ClientElasticSearch $client)
     {
         $this->client = $client;
-        $this->loadArticle = $loadArticle;
     }
 
     /**
@@ -57,7 +50,7 @@ class BlogController extends AbstractController
         //https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-multi-match-query.html
 
         $params = [
-            'index' => $this->loadArticle->getAlias(),
+            'index' => LoadArticle::getAlias(),
             'body' => [
                 'query' => [
                     'multi_match' => [

@@ -4,6 +4,7 @@ namespace App\Model\ETL;
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class ETLArticle
 {
@@ -35,18 +36,24 @@ class ETLArticle
         $this->transform = $transform;
     }
 
-    public function indexAll(bool $live, $output = null)
+    public function indexAll(array $ids, bool $live, OutputInterface $output = null)
     {
         $this->loadArticle->setLiveMode($live);
 
         $this->loadArticle->preLoad();
 
         //Extract
-        $adapter = $this->extractArticle->getAdapter();
+        $adapter = $this->extractArticle->getAdapter($ids);
 
         $pagerfanta = new Pagerfanta($adapter);
         $pagerfanta->setMaxPerPage(500);
         $nbPages = $pagerfanta->getNbPages();
+
+        if ($pagerfanta->getNbResults() === 0) {
+            $output->writeln('no documents to index for '.LoadArticle::getAlias());
+
+            return;
+        }
 
         for ($page = 1 ; $page <= $nbPages ;$page++) {
             $pagerfanta->setCurrentPage($page);
@@ -71,7 +78,7 @@ class ETLArticle
         $this->loadArticle->postLoad();
 
         if (null !== $output) {
-            $output->writeln("\n".$pagerfanta->getNbResults().' documents indexed');
+            $output->writeln("\n".$pagerfanta->getNbResults().' documents indexed in '.LoadArticle::getAlias());
         }
     }
 

@@ -49,6 +49,9 @@ class ClientElasticSearch
      */
     public function delete(array $params): array
     {
+        //type will disapear in future version of ES
+        $params['type'] = $params['index'];
+
         $data = $this->client->delete($params);
         $this->logRequestInfo();
 

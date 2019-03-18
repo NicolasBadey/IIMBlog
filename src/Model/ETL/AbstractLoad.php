@@ -34,7 +34,7 @@ abstract class AbstractLoad
 
     abstract public function getMappingProperties();
     
-    abstract public function getAlias();
+    abstract public static function getAlias();
 
     protected function getMapping() :array
     {
@@ -42,9 +42,9 @@ abstract class AbstractLoad
 
         return [
             'index' => $this->getIndex(),
-            'type' => $this->getAlias(),
+            'type' => static::getAlias(),
             'body' => [
-                $this->getAlias() => [
+                static::getAlias() => [
                     '_source' => [
                         'enabled' => true
                     ],
@@ -62,13 +62,13 @@ abstract class AbstractLoad
                     [
                         'remove' => [
                             'index' => '*',
-                            'alias' => $this->getAlias()
+                            'alias' => static::getAlias()
                         ]
                     ],
                     [
                         'add' => [
                             'index' => $this->getIndex(),
-                            'alias' => $this->getAlias()
+                            'alias' => static::getAlias()
                         ]
                     ]
                 ]
@@ -83,7 +83,7 @@ abstract class AbstractLoad
 
         foreach ($indices as $key => $existingIndex) {
             //only if it's not the current index and not a 3rd party index
-            if ($existingIndex !== $this->getIndex() && 0 === strpos($existingIndex, $this->getAlias())) {
+            if ($existingIndex !== $this->getIndex() && 0 === strpos($existingIndex, static::getAlias())) {
                 $this->client->indices()->delete([
                     'index' => $existingIndex
                 ]);
@@ -99,7 +99,7 @@ abstract class AbstractLoad
     public function getIndexNameFromAlias()
     {
         $aliaseInfo = $this->client->indices()->getAlias([
-            'name' => $this->getAlias()
+            'name' => static::getAlias()
         ]);
         return array_keys($aliaseInfo)[0];
     }
@@ -111,7 +111,7 @@ abstract class AbstractLoad
                 //in this case we want to populate current live index if already exists
                 $this->index = $this->getIndexNameFromAlias();
             } else {
-                $this->index = $this->getAlias().'_'.(new \DateTime())->format('U');
+                $this->index = static::getAlias().'_'.(new \DateTime())->format('U');
             }
         }
 
@@ -151,29 +151,20 @@ abstract class AbstractLoad
 
     public function bulkLoad(array $data)
     {
-        return $this->client->bulk($data, $this->getIndex(), $this->getAlias());
+        return $this->client->bulk($data, $this->getIndex(), static::getAlias());
     }
 
     public function singleLoad(array $data)
     {
         if ($this->aliasExists()) {
-            $this->client->index($data, $this->getAlias(), $this->getAlias());
+            $this->client->index($data, static::getAlias(), static::getAlias());
         } else {
             $this->preLoad();
 
-            $this->client->index($data, $this->getIndex(), $this->getAlias());
+            $this->client->index($data, $this->getIndex(), static::getAlias());
 
             $this->postLoad();
         }
-    }
-
-    public function deleteDocument(int $id): array
-    {
-        return $this->client->delete([
-            'index' => $this->getAlias(),
-            'type' => $this->getAlias(),
-            'id' => $id
-        ]);
     }
 
     /**
@@ -182,7 +173,7 @@ abstract class AbstractLoad
     public function aliasExists()
     {
         return $this->client->indices()->existsAlias([
-            'name' => $this->getAlias()
+            'name' => static::getAlias()
         ]);
     }
 }
