@@ -33,9 +33,9 @@ class ETL
     /**
      * @var int
      *
-     * Be careful,with SQL Limit statement become time consuming after 500
+     * Be careful,with SQL Limit statement become time consuming after 1000, test the good value depending ES load
      */
-    protected $maxPerPAge = 500;
+    protected $maxPerPage = 2000;
 
     /**
      * @param ExtractInterface $extract
@@ -97,6 +97,9 @@ class ETL
      */
     public function run(OutputInterface $output, bool $live = false, array $ids = []): void
     {
+        $timeStart = microtime(true);
+
+
         $this->load->setLiveMode($live);
 
         $this->load->preLoad();
@@ -105,7 +108,7 @@ class ETL
         $adapter = $this->extract->getAdapter($ids);
 
         $pagerfanta = new Pagerfanta($adapter);
-        $pagerfanta->setMaxPerPage($this->maxPerPAge);
+        $pagerfanta->setMaxPerPage($this->maxPerPage);
         $nbPages = $pagerfanta->getNbPages();
 
         if ($pagerfanta->getNbResults() === 0) {
@@ -141,6 +144,7 @@ class ETL
         $this->load->postLoad();
 
         $output->writeln("\n".$pagerfanta->getNbResults().' documents indexed in '.$this->load::getAlias());
+        $output->writeln('time: ' . round(microtime(true) - $timeStart, 1).' sec');
     }
 
     /**
