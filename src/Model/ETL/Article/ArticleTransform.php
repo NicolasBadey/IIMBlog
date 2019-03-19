@@ -17,6 +17,7 @@ class ArticleTransform extends AbstractTransform implements TransformInterface
             'id' => $article->getId(),
             'title' => $article->getTitle(),
             'content' => $article->getContent(),
+            'category' => $article->getCategory() ? $article->getCategory()->getName(): null ,
             'location' => [
                 'lat' => $article->getLatitude(),
                 'lon' => $article->getLongitude(),

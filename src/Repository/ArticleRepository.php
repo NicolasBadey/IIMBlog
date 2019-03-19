@@ -21,7 +21,10 @@ class ArticleRepository extends ServiceEntityRepository
 
     public function getSearchQueryBuilder(array $ids)
     {
-        $qb = $this->createQueryBuilder('a');
+        $qb = $this->createQueryBuilder('a')
+            ->select('a,c')
+            ->leftJoin('a.category', 'c')
+        ;
 
         if (count($ids) > 0) {
             $qb->andWhere('a.id IN (:ids)');

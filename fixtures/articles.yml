@@ -1,6 +1,6 @@
 App\Entity\Category:
-    category{1..10}:
-        name: '<current()>'
+    category{1..10000}:
+        name: 'Category <current()>'
 App\Entity\Article:
     article{1..10000}:
         title: 'Article <current()>'

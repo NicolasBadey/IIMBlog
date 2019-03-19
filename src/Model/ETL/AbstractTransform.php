@@ -5,7 +5,7 @@ class AbstractTransform
 {
     public function transformObjects(array $objects) :array
     {
-        return array_map([
+        return \array_map([
             $this, 'transformObject'
         ], $objects);
     }

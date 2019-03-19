@@ -1,9 +1,8 @@
 <?php
 namespace App\Model\ETL;
 
-use App\Entity\Article;
-use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -33,7 +32,7 @@ class ETL
     /**
      * @var int
      *
-     * Be careful,with SQL Limit statement become time consuming after 1000, test the good value depending ES load
+     * Be careful,with SQL, Limit statement become time consuming after 1000, test the good value depending ES load
      */
     protected $maxPerPage = 2000;
 
@@ -80,15 +79,12 @@ class ETL
     }
 
     /**
-     * @param int $maxPerPAge
+     * @param int $maxPerPage
      */
-    public function setMaxPerPAge(int $maxPerPAge)
+    public function setMaxPerPage(int $maxPerPage)
     {
-        $this->maxPerPAge = $maxPerPAge;
+        $this->maxPerPage = $maxPerPage;
     }
-
-
-
 
     /**
      * @param OutputInterface $output
@@ -97,7 +93,7 @@ class ETL
      */
     public function run(OutputInterface $output, bool $live = false, array $ids = []): void
     {
-        $timeStart = microtime(true);
+        //$timeStart = microtime(true);
 
 
         $this->load->setLiveMode($live);
@@ -116,6 +112,11 @@ class ETL
 
             return;
         }
+
+        $output->writeln('<info>'.$pagerfanta->getNbResults().' documents will be indexed in '.$this->load::getAlias().'</info>');
+
+        $progressBar = new ProgressBar($output, $pagerfanta->getNbPages());
+        $progressBar->start();
 
         for ($page = 1 ; $page <= $nbPages ;$page++) {
             $pagerfanta->setCurrentPage($page);
@@ -136,15 +137,14 @@ class ETL
 
             $this->extract->purgeData();
 
-            $output->write('.');
-
-            //echo round(memory_get_usage()/1000) . "\n";
+            $progressBar->advance();
         }
 
         $this->load->postLoad();
 
-        $output->writeln("\n".$pagerfanta->getNbResults().' documents indexed in '.$this->load::getAlias());
-        $output->writeln('time: ' . round(microtime(true) - $timeStart, 1).' sec');
+        $progressBar->finish();
+
+        $output->writeln('');
     }
 
     /**

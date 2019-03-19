@@ -4,7 +4,7 @@ fixtures:
 	bin/console hautelook:fixtures:load --no-debug
 
 etl:
-	bin/console app:etl:article --no-debug
+	bin/console app:etl:article --no-debug -vvv
 
 csfixer:
 	php php-cs-fixer fix src/

@@ -35,9 +35,7 @@ class ClientElasticSearch
      */
     public function index(array $params, string $index, string $type): array
     {
-        $paramsIndex = $this->prepareForIndex($params, $index, $type);
-
-        $data = $this->client->index($paramsIndex);
+        $data = $this->client->index($params);
         $this->logRequestInfo();
 
         return $data;
@@ -65,48 +63,11 @@ class ClientElasticSearch
      */
     public function bulk(array $params, string $index, string $type): array
     {
-        $paramsIndex = $this->prepareForBulkIndex($params, $index, $type);
-
-        $data = $this->client->bulk($paramsIndex);
+        $data = $this->client->bulk($params);
         $this->logRequestInfo();
 
         return $data;
     }
-
-    public function prepareForBulkIndex(array $params, string $index, string $type): array
-    {
-        $paramsIndex = [];
-
-        foreach ($params as $param) {
-            $paramsIndex['body'][] = [
-                'index' => [
-                    '_index' => $index,
-                    '_type' => $type,
-                    '_id' => $param['id'],
-                ]
-            ];
-
-            unset($param['id']);
-            $paramsIndex['body'][] = $param;
-        }
-
-        return $paramsIndex;
-    }
-
-    public function prepareForIndex(array $param, string $index, string $type): array
-    {
-        $paramIndex= [
-            'index' => $index,
-            'type' => $type,
-            'id' => $param['id'],
-        ];
-
-        unset($param['id']);
-        $paramIndex['body'] = $param;
-
-        return $paramIndex;
-    }
-
 
     /**
      * @param $params

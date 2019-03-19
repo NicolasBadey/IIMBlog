@@ -43,5 +43,8 @@ class ArticleExtract implements ExtractInterface
     {
         $this->em->clear();
         gc_collect_cycles();
+
+        //test you memory usage
+        //echo "\n".(round(memory_get_usage()/1000000,2)).' mo';
     }
 }

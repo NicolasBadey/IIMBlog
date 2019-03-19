@@ -149,24 +149,60 @@ abstract class AbstractLoad
         $this->deleteUnusedIndices();
     }
 
+    public function formatForBulkIndex(array $params): array
+    {
+        $paramsIndex = [];
+
+        foreach ($params as $param) {
+            $paramsIndex['body'][] = [
+                'index' => [
+                    '_index' => $this->getIndex(),
+                    '_type' => static::getAlias(),
+                    '_id' => $param['id'],
+                ]
+            ];
+
+            unset($param['id']);
+            $paramsIndex['body'][] = $param;
+        }
+
+        return $paramsIndex;
+    }
+
+    public function formatForIndex(array $param): array
+    {
+        $paramIndex= [
+            'index' => $this->getIndex(),
+            'type' => static::getAlias(),
+            'id' => $param['id'],
+        ];
+
+        unset($param['id']);
+        $paramIndex['body'] = $param;
+
+        return $paramIndex;
+    }
+
     public function bulkLoad(array $data): array
     {
-        return $this->client->bulk($data, $this->getIndex(), static::getAlias());
+        return $this->client->bulk($this->formatForBulkIndex($data), $this->getIndex(), static::getAlias());
     }
 
     public function singleLoad(array $data, bool $createIndexIdNotExists): array
     {
         if ($this->aliasExists()) {
-            return $this->client->index($data, static::getAlias(), static::getAlias());
+            return $this->client->index($this->formatForIndex($data), static::getAlias(), static::getAlias());
         } elseif (true === $createIndexIdNotExists) {
             $this->preLoad();
 
-            $response = $this->client->index($data, $this->getIndex(), static::getAlias());
+            $response = $this->client->index($this->formatForIndex($data), $this->getIndex(), static::getAlias());
 
             $this->postLoad();
 
             return $response;
         }
+
+        return [];
     }
 
     /**
