@@ -1,4 +1,4 @@
-.PHONY:fixtures etl csfixer test test-v
+.PHONY:fixtures etl csfixer test test-v testfonc
 
 fixtures:
 	bin/console hautelook:fixtures:load --no-debug
@@ -15,6 +15,9 @@ test-v:
 
 test:
 	./vendor/bin/simple-phpunit
+
+testfonc:
+	./vendor/bin/simple-phpunit ./tests/Model
 
 localup:
 	php -S 127.0.0.1:8000 -t public &

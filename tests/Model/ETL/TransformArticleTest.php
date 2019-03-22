@@ -1,7 +1,6 @@
 <?php
 namespace App\tests\Model\ETL;
 
-use App\Entity\Article;
 use Prophecy\Prophet;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -30,6 +29,7 @@ class TransformArticleTest extends KernelTestCase
         $article->getId()->willReturn(42);
         $article->getLongitude()->willReturn(42.24);
         $article->getLatitude()->willReturn(42.24);
+        $article->getCategory()->willReturn(null);
         $article->getContent()->willReturn('lorem');
         $article->getTitle()->willReturn('title42');
 
@@ -47,6 +47,7 @@ class TransformArticleTest extends KernelTestCase
                     'lat' => 42.24,
                     'lon' =>42.24
                 ],
+                'category' => null
             ]
         ], $articleArray);
     }
