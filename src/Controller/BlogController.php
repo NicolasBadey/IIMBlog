@@ -11,8 +11,10 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Form\ArticleType;
+use App\Form\SearchArticleType;
 use App\Model\ElasticSearchClient;
-use App\Model\ETL\Article\ArticleLoad;
+use App\Model\Search\DTO\ArticleSearch;
+use App\Model\Search\Transformer\SearchToArticleQueryTransformer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,11 +27,17 @@ class BlogController extends AbstractController
     protected $client;
 
     /**
+     * @var SearchToArticleQueryTransformer
+     */
+    protected $transformer;
+
+    /**
      * BlogController constructor.
      */
-    public function __construct(ElasticSearchClient $client)
+    public function __construct(ElasticSearchClient $client, SearchToArticleQueryTransformer $transformer)
     {
         $this->client = $client;
+        $this->transformer = $transformer;
     }
 
     /**
@@ -41,78 +49,33 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("/article/search", name="front_article_search")
+     * @Route("/search", name="front_article_search")
      */
-    public function article(Request $request)
+    public function search(Request $request)
     {
-        //https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-multi-match-query.html
+        $form = $this->createForm(SearchArticleType::class);
 
-        $params = [
-            'index' => ArticleLoad::getAlias(),
-            'body' => [
-                'query' => [
-                    'multi_match' => [
-                        'query' => $request->get('search', ''),
-                        'fields' => [
-                            'title^3',
-                            'content',
-                        ],
-                        'minimum_should_match' => '50%',
-                        'type' => 'most_fields',
-                        'fuzziness' => 'AUTO',
-                        //'operator' => 'and', //look at cross_fields type before use operator "and"
-                    ],
-                ],
-            ],
-        ];
+        $form->handleRequest($request);
 
-        /*
-         * if geo distance :
-         *
-         * https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html
-         *
-                $params = [
-                    'index' => ArticleLoad::getAlias(),
-                    'body' => [
-                        'query' => [
-                            'bool' => [
-                                'must' => [
-                                    'multi_match' => [
-                                        'query' =>    $search,
-                                        'fields' => [
-                                            'title^3',
-                                            'content'
-                                        ],
-                                        'minimum_should_match' => '50%',
-                                        'type' => 'most_fields',
-                                        'fuzziness' => 'AUTO',
-                                        //'operator' => 'and', //look at cross_fields type before use operator "and"
-                                    ]
-                                ],
-                                'filter' : [
-                                    'geo_distance' : [
-                                        'distance' : '200km',
-                                        'pin.location' : [
-                                            'lat' : 40,
-                                            'lon' : -70
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ];
-        */
+        if ($form->isSubmitted() && $form->isValid()) {
+            $search = $form->getData();
+        } else {
+            $search = new ArticleSearch();
+        }
 
-        $result = $this->client->search($params);
+        $query = $this->transformer->transform($search);
+        $result = $this->client->search($query);
 
-        return $this->render('blog/article.html.twig', [
+        return $this->render('blog/search.html.twig', [
+            'form' => $form->createView(),
             'articles' => $result['hits']['hits'],
         ]);
     }
 
     /**
      * @Route("/article/add", name="front_article_add")
+     *
+     * just an example, there is EasyAdminBundle
      */
     public function articleCreate(Request $request)
     {

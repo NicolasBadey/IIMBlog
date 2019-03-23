@@ -65,9 +65,27 @@ class ElasticSearchClient implements ElasticsearchClientInterface
         return $data;
     }
 
+    /**
+     * remove array that contains [].
+     */
+    public function cleanArray(&$array)
+    {
+        foreach ($array as $key => $item) {
+            if (\is_array($item)) {
+                $array[$key] = $this->cleanArray($item);
+            }
+
+            if (empty($array[$key])) {
+                unset($array[$key]);
+            }
+        }
+
+        return $array;
+    }
+
     public function search(array $params): array
     {
-        $data = $this->client->search($params);
+        $data = $this->client->search($this->cleanArray($params));
         $this->logRequestInfo();
 
         return $data;

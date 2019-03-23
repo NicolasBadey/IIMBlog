@@ -9,3 +9,5 @@ This bundle show a full integration of Elasticsearch with in side bonus :
 - basic login/logout/register with Guard
 - Messenger (WIP asynchronous indexOne)
 - tests PHPUnit8/Prophecy/Panther
+- TravisCi
+- PHPStan/PHPCSFixer

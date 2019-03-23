@@ -10,7 +10,7 @@ csfixer:
 	php php-cs-fixer fix
 
 test-v:
-	PANTHER_NO_HEADLESS=1 ./vendor/bin/simple-phpunit
+	PANTHER_NO_HEADLESS=1 ./vendor/bin/phpunit
 
 test:
 	./vendor/bin/phpunit
