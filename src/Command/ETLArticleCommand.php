@@ -13,6 +13,7 @@ use App\Model\ETL\Article\ArticleETLBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use ElasticsearchETL\AbstractETLCommand;
 use Monolog\Handler\NullHandler;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Monolog\Logger;
 
 class ETLArticleCommand extends AbstractETLCommand
@@ -20,10 +21,12 @@ class ETLArticleCommand extends AbstractETLCommand
     /**
      * ETLArticleCommand constructor.
      */
-    public function __construct(ArticleETLBuilder $ETLArticleBuilder, EntityManagerInterface $em, Logger $logger)
+    public function __construct(ArticleETLBuilder $ETLArticleBuilder, EntityManagerInterface $em, LoggerInterface $logger)
     {
         //desactivate logs
-        $logger->pushHandler(new NullHandler());
+        if ($logger instanceof Logger) {
+            $logger->pushHandler(new NullHandler());
+        }
         $em->getConfiguration()->setSQLLogger(null);
 
         parent::__construct('app:etl:article');
