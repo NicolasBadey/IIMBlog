@@ -50,11 +50,11 @@ class ArticleTransformTest extends KernelTestCase
                 'id' => 42,
                 'title' => 'title42',
                 'content' => 'lorem',
+                'category' => null,
                 'location' => [
                     'lat' => 42.24,
                     'lon' => 42.24,
                 ],
-                'category' => null,
             ],
         ], $articleArray);
     }

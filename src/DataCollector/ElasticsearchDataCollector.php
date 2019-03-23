@@ -42,9 +42,6 @@ class ElasticsearchDataCollector extends DataCollector
         return $this->data['queries'];
     }
 
-    /**
-     * @return int
-     */
     public function getTime()
     {
         $time = 0;
@@ -55,9 +52,6 @@ class ElasticsearchDataCollector extends DataCollector
         return $time;
     }
 
-    /**
-     * @return int
-     */
     public function getExecutionTime()
     {
         $time = 0;
