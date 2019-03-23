@@ -13,7 +13,7 @@ test-v:
 	PANTHER_NO_HEADLESS=1 ./vendor/bin/simple-phpunit
 
 test:
-	./vendor/bin/simple-phpunit
+	./vendor/bin/phpunit
 
 testfonc:
 	./vendor/bin/simple-phpunit ./tests/Model

@@ -45,7 +45,7 @@ class ElasticsearchLogger extends AbstractLogger
         if (getenv('APP_DEBUG')) {
             $data = $requestInfo['request']['body'];
             $e = new \Exception();
-            if (is_string($data)) {
+            if (\is_string($data)) {
                 $jsonStrings = explode("\n", $data);
                 $data = [];
                 foreach ($jsonStrings as $json) {
@@ -79,7 +79,7 @@ class ElasticsearchLogger extends AbstractLogger
      */
     public function getNbQueries()
     {
-        return count($this->queries);
+        return \count($this->queries);
     }
 
     /**

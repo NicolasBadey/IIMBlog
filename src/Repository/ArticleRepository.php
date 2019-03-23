@@ -33,7 +33,7 @@ class ArticleRepository extends ServiceEntityRepository
             ->leftJoin('a.category', 'c')
         ;
 
-        if (count($ids) > 0) {
+        if (\count($ids) > 0) {
             $qb->andWhere('a.id IN (:ids)');
             $qb->setParameter('ids', $ids);
         }
