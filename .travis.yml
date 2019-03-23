@@ -28,5 +28,5 @@ before_install:
 script:
   - vendor/bin/phpstan.phar analyse src --level=5
   - vendor/bin/php-cs-fixer fix -v --diff --dry-run
-  - php -S 127.0.0.1:8000 -t public
+  - php -S 127.0.0.1:8000 -t public &
   - vendor/bin/phpunit -c phpunit-ci.xml
