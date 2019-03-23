@@ -1,18 +1,24 @@
 <?php
+
+/*
+ * This file is part of the elasticsearch-etl-integration package.
+ * (c) Nicolas Badey https://www.linkedin.com/in/nicolasbadey
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\tests\Model\ETL\Article;
 
 use App\Entity\Article;
 use App\Model\ElasticSearchClient;
 use App\Model\ETL\Article\ArticleLoad;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
-use Pagerfanta\Adapter\AdapterInterface;
 use Prophecy\Prophet;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Output\NullOutput;
 
 class ArticleETLTest extends KernelTestCase
 {
-
     /**
      * @var Prophet
      */
@@ -35,13 +41,13 @@ class ArticleETLTest extends KernelTestCase
 
         $etlBuilder = $container->get('App\Model\ETL\Article\ArticleETLBuilder');
         /**
-         * @var $esClient ElasticSearchClient
+         * @var ElasticSearchClient
          */
         $esClient = $container->get('App\Model\ElasticSearchClient');
 
         $output = new NullOutput();
 
-        /**
+        /*
          * @var $etlBuilder \App\Model\ETL\Article\ArticleETLBuilder
          */
         $etlBuilder->build()->run($output);
@@ -50,10 +56,10 @@ class ArticleETLTest extends KernelTestCase
         $esClient->refresh(['index' => ArticleLoad::getAlias()]);
 
         $nbResult = $esClient->count([
-            'index' => ArticleLoad::getAlias()
+            'index' => ArticleLoad::getAlias(),
         ]);
 
-        $this->assertEquals(10, $nbResult['count']);
+        $this->assertSame(10, $nbResult['count']);
     }
 
     public function testRunOne()
@@ -67,15 +73,14 @@ class ArticleETLTest extends KernelTestCase
 
         $articles = $container->get('App\Repository\ArticleRepository')->findAll();
 
-
-        /**
+        /*
          * @var $etlBuilder \App\Model\ETL\Article\ArticleETLBuilder
          */
         sleep(1); //avoid same timestamp
         $etlBuilder->build()->run($output, false, [$articles[0]->getId()]);
 
         /**
-         * @var $esClient ElasticSearchClient
+         * @var ElasticSearchClient
          */
         $esClient = $container->get('App\Model\ElasticSearchClient');
 
@@ -83,12 +88,10 @@ class ArticleETLTest extends KernelTestCase
         $esClient->refresh(['index' => ArticleLoad::getAlias()]);
 
         $nbResult = $esClient->count([
-            'index' => ArticleLoad::getAlias()
+            'index' => ArticleLoad::getAlias(),
         ]);
 
-
-
-        $this->assertEquals(1, $nbResult['count']);
+        $this->assertSame(1, $nbResult['count']);
     }
 
     public function testAddOneInLiveMode()
@@ -116,13 +119,13 @@ class ArticleETLTest extends KernelTestCase
         $esClient->refresh(['index' => ArticleLoad::getAlias()]);
 
         $nbResult = $esClient->count([
-            'index' => ArticleLoad::getAlias()
+            'index' => ArticleLoad::getAlias(),
         ]);
 
         //there is still the article of the previous test
-        $this->assertEquals(1, $nbResult['count']);
+        $this->assertSame(1, $nbResult['count']);
 
-        /**
+        /*
          * @var $etlBuilder \App\Model\ETL\Article\ArticleETLBuilder
          *
          * we add another article on live index
@@ -133,11 +136,11 @@ class ArticleETLTest extends KernelTestCase
         $esClient->refresh(['index' => ArticleLoad::getAlias()]);
 
         $nbResult = $esClient->count([
-            'index' => ArticleLoad::getAlias()
+            'index' => ArticleLoad::getAlias(),
         ]);
 
         //there is two article now
-        $this->assertEquals(2, $nbResult['count']);
+        $this->assertSame(2, $nbResult['count']);
 
         sleep(1); //avoid same timestamp
         //we erase the index and populate one
@@ -147,14 +150,15 @@ class ArticleETLTest extends KernelTestCase
         $esClient->refresh(['index' => ArticleLoad::getAlias()]);
 
         $nbResult = $esClient->count([
-            'index' => ArticleLoad::getAlias()
+            'index' => ArticleLoad::getAlias(),
         ]);
 
         //there is one article now
-        $this->assertEquals(1, $nbResult['count']);
+        $this->assertSame(1, $nbResult['count']);
     }
 
-    public function testIndexOne() {
+    public function testIndexOne()
+    {
         self::bootKernel();
         $container = self::$container;
 
@@ -163,13 +167,13 @@ class ArticleETLTest extends KernelTestCase
         $article3 = $this->getArticleMock(44);
 
         /**
-         * @var $etlBuilder \App\Model\ETL\Article\ArticleETLBuilder
+         * @var \App\Model\ETL\Article\ArticleETLBuilder
          */
         $etlBuilder = $container->get('App\Model\ETL\Article\ArticleETLBuilder');
         $etl = $etlBuilder->build();
 
         /**
-         * @var $esClient ElasticSearchClient
+         * @var ElasticSearchClient
          */
         $esClient = $container->get('App\Model\ElasticSearchClient');
 
@@ -181,7 +185,7 @@ class ArticleETLTest extends KernelTestCase
 
         $this->expectException(Missing404Exception::class);
         $esClient->count([
-            'index' => ArticleLoad::getAlias()
+            'index' => ArticleLoad::getAlias(),
         ]);
 
         $etl->indexOne($article2->reveal());
@@ -189,23 +193,24 @@ class ArticleETLTest extends KernelTestCase
         $esClient->refresh(['index' => ArticleLoad::getAlias()]);
 
         $nbResult = $esClient->count([
-            'index' => ArticleLoad::getAlias()
+            'index' => ArticleLoad::getAlias(),
         ]);
 
-        $this->assertEquals(1, $nbResult['count']);
+        $this->assertSame(1, $nbResult['count']);
 
         $etl->indexOne($article3->reveal());
 
         $esClient->refresh(['index' => ArticleLoad::getAlias()]);
 
         $nbResult = $esClient->count([
-            'index' => ArticleLoad::getAlias()
+            'index' => ArticleLoad::getAlias(),
         ]);
 
-        $this->assertEquals(2, $nbResult['count']);
+        $this->assertSame(2, $nbResult['count']);
     }
 
-    public function getArticleMock($id) {
+    public function getArticleMock($id)
+    {
         $article = $this->prophet->prophesize('App\Entity\Article');
 
         $article->getId()->willReturn($id);

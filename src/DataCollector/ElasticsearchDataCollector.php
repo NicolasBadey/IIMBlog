@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the elasticsearch-etl-integration package.
+ * (c) Nicolas Badey https://www.linkedin.com/in/nicolasbadey
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\DataCollector;
 
 use App\Logger\ElasticsearchLogger;
@@ -8,11 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
- * Class ElasticsearchDataCollector
- * @package App\DataCollector
- *
- * Data collector collecting elasticsearch statistics.
- * Simpler version of ElasticaBundle's DataCollector
+ * Class ElasticsearchDataCollector.
  */
 class ElasticsearchDataCollector extends DataCollector
 {
@@ -29,17 +32,11 @@ class ElasticsearchDataCollector extends DataCollector
         $this->data['queries'] = $this->logger->getQueries();
     }
 
-    /**
-     * @return mixed
-     */
     public function getQueryCount()
     {
         return $this->data['nb_queries'];
     }
 
-    /**
-     * @return mixed
-     */
     public function getQueries()
     {
         return $this->data['queries'];
@@ -57,6 +54,7 @@ class ElasticsearchDataCollector extends DataCollector
 
         return $time;
     }
+
     /**
      * @return int
      */
@@ -66,6 +64,7 @@ class ElasticsearchDataCollector extends DataCollector
         foreach ($this->data['queries'] as $query) {
             $time += $query['executionMS'];
         }
+
         return $time;
     }
 

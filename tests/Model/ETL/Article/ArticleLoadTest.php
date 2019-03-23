@@ -1,12 +1,18 @@
 <?php
+
+/*
+ * This file is part of the elasticsearch-etl-integration package.
+ * (c) Nicolas Badey https://www.linkedin.com/in/nicolasbadey
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\tests\Model\ETL\Article;
 
-use Prophecy\Prophet;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ArticleLoadTest extends KernelTestCase
 {
-
     public function testGetAlias()
     {
         self::bootKernel();
@@ -14,7 +20,7 @@ class ArticleLoadTest extends KernelTestCase
 
         $alias = $container->get('App\Model\ETL\Article\ArticleLoad')->getAlias();
 
-        $this->assertEquals('article_test', $alias);
+        $this->assertSame('article_test', $alias);
     }
 
     public function testGetMappingProperties()
@@ -24,19 +30,18 @@ class ArticleLoadTest extends KernelTestCase
 
         $mapping = $container->get('App\Model\ETL\Article\ArticleLoad')->getMappingProperties();
 
-        $this->assertEquals([
+        $this->assertSame([
             'location' => [
-                'type' => 'geo_point'
+                'type' => 'geo_point',
             ],
             'title' => [
                 'type' => 'text',
-                'analyzer' => 'french'
+                'analyzer' => 'french',
             ],
             'content' => [
                 'type' => 'text',
-                'analyzer' => 'french'
-            ]
+                'analyzer' => 'french',
+            ],
         ], $mapping);
-
     }
 }

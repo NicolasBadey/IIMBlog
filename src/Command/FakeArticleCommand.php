@@ -1,9 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nico
- * Date: 19/03/19
- * Time: 14:42
+
+/*
+ * This file is part of the elasticsearch-etl-integration package.
+ * (c) Nicolas Badey https://www.linkedin.com/in/nicolasbadey
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Command;
@@ -22,8 +23,6 @@ class FakeArticleCommand extends Command
 
     /**
      * UserRoleCommand constructor.
-     * @param UserRepository $userRepository
-     * @param EntityManagerInterface $entityManager
      */
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -31,7 +30,6 @@ class FakeArticleCommand extends Command
 
         $this->em = $entityManager;
     }
-
 
     protected function configure()
     {
@@ -58,7 +56,7 @@ class FakeArticleCommand extends Command
  ('Hilaire', 'Savary', 42, 42);
 SQL;
 
-        for ($i = 0; $i< 100000 ;$i++) {
+        for ($i = 0; $i < 100000; ++$i) {
             $connection->exec($sql);
         }
     }

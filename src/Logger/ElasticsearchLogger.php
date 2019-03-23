@@ -1,15 +1,19 @@
 <?php
+
+/*
+ * This file is part of the elasticsearch-etl-integration package.
+ * (c) Nicolas Badey https://www.linkedin.com/in/nicolasbadey
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Logger;
 
-use Elasticsearch\Connections\ConnectionInterface;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class ElasticsearchLogger
- * @package App\Logger
- *
- * simpler version of ElasticaBundle's Logger
+ * Class ElasticsearchLogger.
  */
 class ElasticsearchLogger extends AbstractLogger
 {
@@ -17,7 +21,7 @@ class ElasticsearchLogger extends AbstractLogger
      * @var LoggerInterface
      */
     protected $logger;
-    
+
     /**
      * @var array
      */
@@ -29,17 +33,12 @@ class ElasticsearchLogger extends AbstractLogger
      * Constructor.
      *
      * @param LoggerInterface|null $logger The Symfony logger
-     * @param bool                 $debug
      */
     public function __construct(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
     }
 
-    /**
-     * @param array $requestInfo
-     * @param ConnectionInterface $connection
-     */
     public function logQuery(array $requestInfo)
     {
         //this is only perform for DataCollector purpose, so only if it's Debug mode only
@@ -50,7 +49,7 @@ class ElasticsearchLogger extends AbstractLogger
                 $jsonStrings = explode("\n", $data);
                 $data = [];
                 foreach ($jsonStrings as $json) {
-                    if ($json != '') {
+                    if ('' !== $json) {
                         $data[] = json_decode($json, true);
                     }
                 }

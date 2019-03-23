@@ -1,9 +1,14 @@
 <?php
 
+/*
+ * This file is part of the elasticsearch-etl-integration package.
+ * (c) Nicolas Badey https://www.linkedin.com/in/nicolasbadey
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Entity;
 
-use App\Model\ETL\Article\ArticleLoad;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,7 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Article
 {
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

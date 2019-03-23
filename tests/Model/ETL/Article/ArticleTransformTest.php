@@ -1,4 +1,12 @@
 <?php
+
+/*
+ * This file is part of the elasticsearch-etl-integration package.
+ * (c) Nicolas Badey https://www.linkedin.com/in/nicolasbadey
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\tests\Model\ETL\Article;
 
 use Prophecy\Prophet;
@@ -6,7 +14,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ArticleTransformTest extends KernelTestCase
 {
-
     /**
      * @var Prophet
      */
@@ -38,17 +45,17 @@ class ArticleTransformTest extends KernelTestCase
 
         $articleArray = $container->get('App\Model\ETL\Article\ArticleTransform')->transformObjects([$article->reveal()]);
 
-        $this->assertEquals([
+        $this->assertSame([
             [
                 'id' => 42,
                 'title' => 'title42',
                 'content' => 'lorem',
                 'location' => [
                     'lat' => 42.24,
-                    'lon' =>42.24
+                    'lon' => 42.24,
                 ],
-                'category' => null
-            ]
+                'category' => null,
+            ],
         ], $articleArray);
     }
 }

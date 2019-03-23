@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the elasticsearch-etl-integration package.
+ * (c) Nicolas Badey https://www.linkedin.com/in/nicolasbadey
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Model\ETL\Article;
 
 use App\Repository\ArticleRepository;
@@ -22,7 +29,6 @@ class ArticleExtract implements ExtractInterface
 
     /**
      * ExtractArticle constructor.
-     * @param ArticleRepository $articleRepository
      */
     public function __construct(ArticleRepository $articleRepository, EntityManagerInterface $em)
     {
@@ -31,15 +37,15 @@ class ArticleExtract implements ExtractInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function getAdapter(array $ids =[]): AdapterInterface
+    public function getAdapter(array $ids = []): AdapterInterface
     {
         return new DoctrineORMAdapter($this->articleRepository->getSearchQueryBuilder($ids));
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function purgeData(): void
     {

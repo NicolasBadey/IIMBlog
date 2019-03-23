@@ -1,20 +1,26 @@
 <?php
+
+/*
+ * This file is part of the elasticsearch-etl-integration package.
+ * (c) Nicolas Badey https://www.linkedin.com/in/nicolasbadey
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Command;
 
 use App\Model\ETL\Article\ArticleETLBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use ElasticsearchETL\AbstractETLCommand;
 use Monolog\Handler\NullHandler;
-use Psr\Log\LoggerInterface;
+use Symfony\Bridge\Monolog\Logger;
 
 class ETLArticleCommand extends AbstractETLCommand
 {
-
     /**
      * ETLArticleCommand constructor.
-     * @param ArticleETLBuilder $ETLArticleBuilder
      */
-    public function __construct(ArticleETLBuilder $ETLArticleBuilder, EntityManagerInterface $em, LoggerInterface $logger)
+    public function __construct(ArticleETLBuilder $ETLArticleBuilder, EntityManagerInterface $em, Logger $logger)
     {
         //desactivate logs
         $logger->pushHandler(new NullHandler());

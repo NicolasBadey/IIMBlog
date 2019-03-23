@@ -1,41 +1,38 @@
 <?php
 
+/*
+ * This file is part of the elasticsearch-etl-integration package.
+ * (c) Nicolas Badey https://www.linkedin.com/in/nicolasbadey
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Model\ETL\Article;
 
-use App\Model\ElasticSearchClient;
 use ElasticsearchETL\AbstractElasticsearchLoad;
 
 class ArticleLoad extends AbstractElasticsearchLoad
 {
-
-
-
-    /**
-     * @return string
-     */
     public static function getAlias(): string
     {
-        return 'article_'.strtolower(getenv('APP_ENV'));
+        return 'article_'.mb_strtolower(getenv('APP_ENV'));
     }
 
-    /**
-     * @return array
-     */
-    public function getMappingProperties() :array
+    public function getMappingProperties(): array
     {
         // if you are multi language use : https://www.elastic.co/guide/en/elasticsearch/guide/current/mixed-lang-fields.html
 
         return [
             'location' => [
-                'type' => 'geo_point'
+                'type' => 'geo_point',
             ],
             'title' => [
                 'type' => 'text',
-                'analyzer' => 'french'
+                'analyzer' => 'french',
             ],
             'content' => [
                 'type' => 'text',
-                'analyzer' => 'french'
+                'analyzer' => 'french',
             ],
         ];
     }

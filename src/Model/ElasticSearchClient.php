@@ -1,4 +1,12 @@
 <?php
+
+/*
+ * This file is part of the elasticsearch-etl-integration package.
+ * (c) Nicolas Badey https://www.linkedin.com/in/nicolasbadey
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Model;
 
 use App\Logger\ElasticsearchLogger;
@@ -7,10 +15,7 @@ use Elasticsearch\Namespaces\IndicesNamespace;
 use ElasticsearchETL\ElasticsearchClientInterface;
 
 /**
- * Class ElasticSearchClient
- * @package App\Model
- *
- * Layer on top of elasticsearch-php ClientBuilder for service and inject Symfony logger
+ * Class ElasticSearchClient.
  */
 class ElasticSearchClient implements ElasticsearchClientInterface
 {
@@ -18,15 +23,14 @@ class ElasticSearchClient implements ElasticsearchClientInterface
      * @var \Elasticsearch\Client
      */
     private $client;
+
     /**
      * @var ElasticsearchLogger
      */
     private $logger;
 
     /**
-     * Client constructor.
-     * @param array $elasticsearch_config
-     * @param ElasticsearchLogger $logger
+     * ElasticSearchClient constructor.
      */
     public function __construct(array $elasticsearch_config, ElasticsearchLogger $logger)
     {
@@ -37,10 +41,6 @@ class ElasticSearchClient implements ElasticsearchClientInterface
             ->build();
     }
 
-    /**
-     * @param $params
-     * @return array
-     */
     public function index(array $params): array
     {
         $data = $this->client->index($params);
@@ -49,10 +49,6 @@ class ElasticSearchClient implements ElasticsearchClientInterface
         return $data;
     }
 
-    /**
-     * @param $params
-     * @return array
-     */
     public function delete(array $params): array
     {
         $data = $this->client->delete($params);
@@ -61,11 +57,6 @@ class ElasticSearchClient implements ElasticsearchClientInterface
         return $data;
     }
 
-    /**
-     * @param array $params
-     * @param string $type
-     * @return array
-     */
     public function bulk(array $params = []): array
     {
         $data = $this->client->bulk($params);
@@ -74,10 +65,6 @@ class ElasticSearchClient implements ElasticsearchClientInterface
         return $data;
     }
 
-    /**
-     * @param $params
-     * @return array
-     */
     public function search(array $params): array
     {
         $data = $this->client->search($params);
@@ -85,12 +72,7 @@ class ElasticSearchClient implements ElasticsearchClientInterface
 
         return $data;
     }
-        
 
-    /**
-     * @param $params
-     * @return array
-     */
     public function suggest(array $params): array
     {
         $data = $this->client->suggest($params);
@@ -116,35 +98,29 @@ class ElasticSearchClient implements ElasticsearchClientInterface
     }
 
     /**
-     * @param $params
      * @return array|bool
      */
-    public function exists($params)
+    public function exists(array $params)
     {
         return $this->client->exists($params);
     }
 
     /**
-     * @param $params
      * @return array
      */
-    public function count($params)
+    public function count(array $params)
     {
         return $this->client->count($params);
     }
 
     /**
-     * @param $params
      * @return array
      */
-    public function refresh($params)
+    public function refresh(array $params)
     {
         return $this->client->indices()->refresh($params);
     }
 
-    /**
-     * @return \Elasticsearch\Namespaces\IndicesNamespace
-     */
     public function indices(): IndicesNamespace
     {
         return $this->client->indices();
@@ -153,8 +129,9 @@ class ElasticSearchClient implements ElasticsearchClientInterface
     public function getIndexNameFromAlias(string $alias): array
     {
         $aliaseInfo = $this->client->indices()->getAlias([
-            'name' => $alias
+            'name' => $alias,
         ]);
+
         return array_keys($aliaseInfo);
     }
 }

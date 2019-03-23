@@ -1,10 +1,18 @@
 <?php
+
+/*
+ * This file is part of the elasticsearch-etl-integration package.
+ * (c) Nicolas Badey https://www.linkedin.com/in/nicolasbadey
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table()
@@ -32,7 +40,7 @@ class User implements UserInterface, \Serializable
     private $password;
 
     /**
-     * not mapped
+     * not mapped.
      */
     private $plainPassword;
 
@@ -66,18 +74,21 @@ class User implements UserInterface, \Serializable
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
+
         return array_unique($roles);
     }
 
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+
         return $this;
     }
 
     public function addRole($role): self
     {
         $this->roles[] = $role;
+
         return $this;
     }
 
@@ -86,7 +97,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Present du to interface but not needed thanks to argon2i
+     * Present du to interface but not needed thanks to argon2i.
      */
     public function getSalt()
     {
@@ -98,50 +109,42 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * @param mixed $username
      * @return User
      */
     public function setUsername($username)
     {
         $this->username = $username;
+
         return $this;
     }
 
     /**
-     * @param mixed $password
      * @return User
      */
     public function setPassword($password)
     {
         $this->password = $password;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getPlainPassword()
     {
         return $this->plainPassword;
     }
 
-    /**
-     * @param mixed $plainPassword
-     */
     public function setPlainPassword($plainPassword)
     {
         $this->plainPassword = $plainPassword;
     }
 
-
-
     /**
-     * @param mixed $isActive
      * @return User
      */
     public function setIsActive($isActive)
     {
         $this->isActive = $isActive;
+
         return $this;
     }
 
@@ -153,16 +156,14 @@ class User implements UserInterface, \Serializable
         return $this->isActive;
     }
 
-
-
     /** @see \Serializable::serialize() */
     public function serialize()
     {
-        return serialize(array(
+        return serialize([
             $this->id,
             $this->username,
             $this->password,
-        ));
+        ]);
     }
 
     /** @see \Serializable::unserialize() */
@@ -171,8 +172,7 @@ class User implements UserInterface, \Serializable
         list(
             $this->id,
             $this->username,
-            $this->password,
-            ) = unserialize($serialized, array('allowed_classes' => false));
+            $this->password) = unserialize($serialized, ['allowed_classes' => false]);
     }
 
     public function __toString()

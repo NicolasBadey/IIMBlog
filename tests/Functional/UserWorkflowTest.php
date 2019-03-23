@@ -1,8 +1,14 @@
 <?php
 
+/*
+ * This file is part of the elasticsearch-etl-integration package.
+ * (c) Nicolas Badey https://www.linkedin.com/in/nicolasbadey
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Tests\Functional;
 
-use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 use Symfony\Component\Panther\PantherTestCase;
 
 class UserWorkflowTest extends PantherTestCase
@@ -14,6 +20,7 @@ class UserWorkflowTest extends PantherTestCase
 
         $this->assertStringContainsString('Welcom', $crawler->filter('main')->text());
     }
+
     public function testRegister()
     {
         $client = static::createPantherClient();
@@ -24,7 +31,6 @@ class UserWorkflowTest extends PantherTestCase
         $form = $crawler->filter('form[name=registration_form]')->form([
             'registration_form[username]' => 'test@test.com',
             'registration_form[plainPassword]' => 'Password42',
-
         ]);
         $crawler = $client->submit($form);
 
@@ -51,7 +57,6 @@ class UserWorkflowTest extends PantherTestCase
         $form = $crawler->filter('#login')->form([
             'username' => 'test@test.com',
             'password' => 'Password42',
-
         ]);
         $crawler = $client->submit($form);
 

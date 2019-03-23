@@ -1,8 +1,15 @@
 <?php
+
+/*
+ * This file is part of the elasticsearch-etl-integration package.
+ * (c) Nicolas Badey https://www.linkedin.com/in/nicolasbadey
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Command;
 
 use App\Entity\User;
-use App\Model\ETL\ETL;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -12,7 +19,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class UserRoleCommand extends Command
 {
-
     /**
      * @var UserRepository
      */
@@ -25,8 +31,6 @@ class UserRoleCommand extends Command
 
     /**
      * UserRoleCommand constructor.
-     * @param UserRepository $userRepository
-     * @param EntityManagerInterface $entityManager
      */
     public function __construct(UserRepository $userRepository, EntityManagerInterface $entityManager)
     {
@@ -36,7 +40,6 @@ class UserRoleCommand extends Command
         $this->em = $entityManager;
     }
 
-
     protected function configure()
     {
         $this
@@ -44,7 +47,6 @@ class UserRoleCommand extends Command
             ->setDescription('add role for user')
             ->addArgument('username', InputArgument::REQUIRED, 'username')
             ->addArgument('role', InputArgument::REQUIRED, 'role name');
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -52,11 +54,8 @@ class UserRoleCommand extends Command
         $username = $input->getArgument('username');
         $role = $input->getArgument('role');
 
-        /**
-         * @var $user User
-         */
         $user = $this->userRepository->findOneBy([
-            'username' => $username
+            'username' => $username,
         ]);
 
         if (null === $user) {
