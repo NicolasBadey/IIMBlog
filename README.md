@@ -1,8 +1,11 @@
-# IIMBlog
-For IIM school students purposes
+# symfony-elasticsearch-integration
 
-This Sf4 installation is designed for be used as a Elasticsearch integration for students using :
-- some entities
-- elasticsearch-php
-- ETL with Symfony Command and model
-- DataCollector for WebProfiler
+Symfony Elasticsearch integration for [elasticsearch-php-etl](https://github.com/NicolasBadey/elasticsearch-php-etl)  repository with elaticsearch-php library.
+
+This bundle show a full integration of Elasticsearch with in side bonus :
+- Webpack Encore/Bootstrap 4 for front
+- EasyAdmin / CKeditor + ElFinder for admin
+- AliceBundle for fixtures
+- basic login/logout/register with Guard
+- Messenger (WIP asynchronous indexOne)
+- tests PHPUnit/Prophecy/Panther

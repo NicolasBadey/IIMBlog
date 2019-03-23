@@ -1,10 +1,7 @@
 <?php
 
 /*
- * This file is part of the elasticsearch-etl-integration package.
- * (c) Nicolas Badey https://www.linkedin.com/in/nicolasbadey
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+* Simplified version of ElasticaBundle Logger
  */
 
 namespace App\Logger;

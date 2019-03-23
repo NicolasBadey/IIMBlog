@@ -67,9 +67,12 @@ class BlogController extends AbstractController
         ];
 
         /*
+         * if geo distance :
+         *
+         * https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html
+         *
                 $params = [
-                    'index' => 'article',
-                    'type' => 'doc',
+                    'index' => ArticleLoad::getAlias(),
                     'body' => [
                         'query' => [
                             'bool' => [
@@ -86,9 +89,15 @@ class BlogController extends AbstractController
                                         //'operator' => 'and', //look at cross_fields type before use operator "and"
                                     ]
                                 ],
-
-                                // complete geo-location distance here with :
-                                // https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html#_lat_lon_as_properties_3
+                                'filter' : [
+                                    'geo_distance' : [
+                                        'distance' : '200km',
+                                        'pin.location' : [
+                                            'lat' : 40,
+                                            'lon' : -70
+                                        ]
+                                    ]
+                                ]
                             ]
                         ]
                     ]
@@ -118,7 +127,7 @@ class BlogController extends AbstractController
             $entityManager->persist($article);
             $entityManager->flush();
 
-            //add a success FlashBag here
+            $this->addFlash('succes', 'your message');
 
             return $this->redirectToRoute('article_list'); //create the action article_list
         }

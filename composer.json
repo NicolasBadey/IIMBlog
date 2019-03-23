@@ -25,6 +25,7 @@
         "symfony/form": "*",
         "symfony/framework-bundle": "*",
         "symfony/intl": "*",
+        "symfony/messenger": "4.2.*",
         "symfony/monolog-bundle": "^3.1",
         "symfony/proxy-manager-bridge": "4.2.*",
         "symfony/security-bundle": "*",
