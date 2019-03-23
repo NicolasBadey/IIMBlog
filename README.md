@@ -8,4 +8,4 @@ This bundle show a full integration of Elasticsearch with in side bonus :
 - AliceBundle for fixtures
 - basic login/logout/register with Guard
 - Messenger (WIP asynchronous indexOne)
-- tests PHPUnit/Prophecy/Panther
+- tests PHPUnit8/Prophecy/Panther
