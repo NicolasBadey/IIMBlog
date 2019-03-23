@@ -16,9 +16,15 @@ matrix:
 install:
   - composer install --prefer-dist
 
+
 before_script:
+  #wait elasticsearch up
   - sleep 10
 
+before_install:
+    # Fix Argon2i password hasher in TravisCi PHP version
+    - composer require paragonie/sodium_compat
+    
 script:
   - vendor/bin/phpstan.phar analyse src --level=1
   - vendor/bin/phpunit -c phpunit-ci.xml
