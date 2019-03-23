@@ -1,9 +1,9 @@
 <?php
 namespace App\Command;
 
-use App\Model\ETL\AbstractETLCommand;
 use App\Model\ETL\Article\ArticleETLBuilder;
 use Doctrine\ORM\EntityManagerInterface;
+use ElasticsearchETL\AbstractETLCommand;
 use Monolog\Handler\NullHandler;
 use Psr\Log\LoggerInterface;
 
