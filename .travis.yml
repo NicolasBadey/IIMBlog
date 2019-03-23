@@ -2,6 +2,9 @@ dist: xenial
 
 language: php
 
+addons:
+  chrome: stable
+
 services:
   - mysql
   - elasticsearch
