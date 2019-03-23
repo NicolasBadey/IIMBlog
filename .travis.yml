@@ -1,7 +1,5 @@
 language: php
 
-
-
 services:
   - mysql
   - elasticsearch
@@ -13,14 +11,12 @@ matrix:
   include:
     - php: 7.2
 
-before_install:
-  - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('root') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
-
 install:
   - composer install --prefer-dist
 
+before_script:
+  - sleep 10
+
 script:
-  - composer run-script phpcs; fi
-  - composer run-script phpstan
-  - vendor/bin/phpunit $PHPUNIT_FLAGS
-  - vendor/bin/phpunit -c phpunit-integration.xml --group sync $PHPUNIT_FLAGS
+  - vendor/bin/phpstan.phar analyse src --level=1
+  - vendor/bin/phpunit -c phpunit-integration.xml
