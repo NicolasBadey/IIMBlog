@@ -1,12 +1,10 @@
-dist: xenial
-
 language: php
 
 addons:
   chrome: stable
 
 services:
-  - mysql
+  - mariadb: '10.3'
   - elasticsearch
 
 sudo: true
@@ -24,7 +22,6 @@ before_install:
   - sudo add-apt-repository ppa:ondrej/php -y
   - sudo apt-get -qq update
   - sudo apt-get install -y libsodium-dev
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost:9080 &
 
 script:
   - vendor/bin/phpstan.phar analyse src --level=5
