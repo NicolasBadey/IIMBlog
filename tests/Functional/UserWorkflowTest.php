@@ -9,13 +9,13 @@
 
 namespace App\Tests\Functional;
 
-use Symfony\Component\Panther\PantherTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class UserWorkflowTest extends PantherTestCase
+class UserWorkflowTest extends WebTestCase
 {
     public function testHome()
     {
-        $client = static::createPantherClient();
+        $client = static::createClient();
         $crawler = $client->request('GET', '/');
 
         $this->assertStringContainsString('Welcom', $crawler->filter('main')->text());
@@ -23,7 +23,7 @@ class UserWorkflowTest extends PantherTestCase
 
     public function testRegister()
     {
-        $client = static::createPantherClient();
+        $client = static::createClient();
         $crawler = $client->request('GET', '/register');
 
         $this->assertStringContainsString('Register', $crawler->filter('main')->text());
@@ -39,7 +39,7 @@ class UserWorkflowTest extends PantherTestCase
 
     public function testlogout()
     {
-        $client = static::createPantherClient();
+        $client = static::createClient();
         $crawler = $client->request('GET', '/logout');
 
         $this->assertStringNotContainsString('Welcome test@test.com', $crawler->filter('main')->text());
@@ -48,7 +48,7 @@ class UserWorkflowTest extends PantherTestCase
 
     public function testLogin()
     {
-        $client = static::createPantherClient();
+        $client = static::createClient();
 
         $crawler = $client->request('GET', '/login');
 

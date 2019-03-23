@@ -3,7 +3,7 @@ dist: xenial
 language: php
 
 addons:
-  chrome: beta
+  chrome: stable
 
 services:
   - mysql
