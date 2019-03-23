@@ -193,6 +193,9 @@
             "config/packages/test/nelmio_alice.yaml"
         ]
     },
+    "nicolasbadey/elasticsearch-php-etl": {
+        "version": "dev-master"
+    },
     "nikic/php-parser": {
         "version": "v4.0.2"
     },

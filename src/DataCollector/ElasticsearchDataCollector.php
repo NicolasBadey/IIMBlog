@@ -8,7 +8,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
+ * Class ElasticsearchDataCollector
+ * @package App\DataCollector
+ *
  * Data collector collecting elasticsearch statistics.
+ * Simpler version of ElasticaBundle's DataCollector
  */
 class ElasticsearchDataCollector extends DataCollector
 {

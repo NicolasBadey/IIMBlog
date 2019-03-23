@@ -3,8 +3,16 @@ namespace App\Model;
 
 use App\Logger\ElasticsearchLogger;
 use Elasticsearch\ClientBuilder;
+use Elasticsearch\Namespaces\IndicesNamespace;
+use ElasticsearchETL\ElasticsearchClientInterface;
 
-class ClientElasticSearch
+/**
+ * Class ElasticSearchClient
+ * @package App\Model
+ *
+ * Layer on top of elasticsearch-php ClientBuilder for service and inject Symfony logger
+ */
+class ElasticSearchClient implements ElasticsearchClientInterface
 {
     /**
      * @var \Elasticsearch\Client
@@ -33,7 +41,7 @@ class ClientElasticSearch
      * @param $params
      * @return array
      */
-    public function index(array $params, string $index, string $type): array
+    public function index(array $params): array
     {
         $data = $this->client->index($params);
         $this->logRequestInfo();
@@ -47,9 +55,6 @@ class ClientElasticSearch
      */
     public function delete(array $params): array
     {
-        //type will disapear in future version of ES
-        $params['type'] = $params['index'];
-
         $data = $this->client->delete($params);
         $this->logRequestInfo();
 
@@ -61,7 +66,7 @@ class ClientElasticSearch
      * @param string $type
      * @return array
      */
-    public function bulk(array $params, string $index, string $type): array
+    public function bulk(array $params = []): array
     {
         $data = $this->client->bulk($params);
         $this->logRequestInfo();
@@ -120,10 +125,36 @@ class ClientElasticSearch
     }
 
     /**
+     * @param $params
+     * @return array
+     */
+    public function count($params)
+    {
+        return $this->client->count($params);
+    }
+
+    /**
+     * @param $params
+     * @return array
+     */
+    public function refresh($params)
+    {
+        return $this->client->indices()->refresh($params);
+    }
+
+    /**
      * @return \Elasticsearch\Namespaces\IndicesNamespace
      */
-    public function indices()
+    public function indices(): IndicesNamespace
     {
         return $this->client->indices();
+    }
+
+    public function getIndexNameFromAlias(string $alias): array
+    {
+        $aliaseInfo = $this->client->indices()->getAlias([
+            'name' => $alias
+        ]);
+        return array_keys($aliaseInfo);
     }
 }

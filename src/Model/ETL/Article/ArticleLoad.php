@@ -2,19 +2,20 @@
 
 namespace App\Model\ETL\Article;
 
-use App\Model\ClientElasticSearch;
-use App\Model\ETL\AbstractLoad;
-use App\Model\ETL\LoadInterface;
-use Symfony\Component\Validator\Mapping\Loader\AbstractLoader;
+use App\Model\ElasticSearchClient;
+use ElasticsearchETL\AbstractElasticsearchLoad;
 
-class ArticleLoad extends AbstractLoad implements LoadInterface
+class ArticleLoad extends AbstractElasticsearchLoad
 {
+
+
+
     /**
      * @return string
      */
     public static function getAlias(): string
     {
-        return 'article_'.strtolower($_SERVER['APP_ENV']);
+        return 'article_'.strtolower(getenv('APP_ENV'));
     }
 
     /**

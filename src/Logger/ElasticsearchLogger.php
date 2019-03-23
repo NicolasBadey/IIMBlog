@@ -5,6 +5,12 @@ use Elasticsearch\Connections\ConnectionInterface;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class ElasticsearchLogger
+ * @package App\Logger
+ *
+ * simpler version of ElasticaBundle's Logger
+ */
 class ElasticsearchLogger extends AbstractLogger
 {
     /**
@@ -36,7 +42,8 @@ class ElasticsearchLogger extends AbstractLogger
      */
     public function logQuery(array $requestInfo)
     {
-        if ($_SERVER['APP_DEBUG']) {
+        //this is only perform for DataCollector purpose, so only if it's Debug mode only
+        if (getenv('APP_DEBUG')) {
             $data = $requestInfo['request']['body'];
             $e = new \Exception();
             if (is_string($data)) {

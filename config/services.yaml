@@ -48,3 +48,5 @@ services:
         tags:
            - { name: data_collector, template: 'Collector/elasticsearch.html.twig', id: 'app.elasticsearch_data_collector' }
 
+    ElasticsearchETL\ElasticsearchClientInterface: '@App\Model\ElasticSearchClient'
+

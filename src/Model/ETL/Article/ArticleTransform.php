@@ -2,10 +2,10 @@
 namespace App\Model\ETL\Article;
 
 use App\Entity\Article;
-use App\Model\ETL\AbstractTransform;
-use App\Model\ETL\TransformInterface;
+use ElasticsearchETL\AbstractTransform;
 
-class ArticleTransform extends AbstractTransform implements TransformInterface
+
+class ArticleTransform extends AbstractTransform
 {
     /**
      * @param $article Article

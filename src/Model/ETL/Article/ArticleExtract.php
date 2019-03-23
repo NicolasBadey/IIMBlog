@@ -2,9 +2,9 @@
 
 namespace App\Model\ETL\Article;
 
-use App\Model\ETL\ExtractInterface;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use ElasticsearchETL\ExtractInterface;
 use Pagerfanta\Adapter\AdapterInterface;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 
@@ -31,20 +31,22 @@ class ArticleExtract implements ExtractInterface
     }
 
     /**
-     * @param array $ids
-     * @return AdapterInterface
+     * @inheritdoc
      */
-    public function getAdapter(array $ids): AdapterInterface
+    public function getAdapter(array $ids =[]): AdapterInterface
     {
         return new DoctrineORMAdapter($this->articleRepository->getSearchQueryBuilder($ids));
     }
 
+    /**
+     * @inheritdoc
+     */
     public function purgeData(): void
     {
         $this->em->clear();
         gc_collect_cycles();
 
-        //test you memory usage
+        //test memory usage
         //echo "\n".(round(memory_get_usage()/1000000,2)).' mo';
     }
 }

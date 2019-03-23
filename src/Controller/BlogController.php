@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Article;
-use App\Model\ClientElasticSearch;
+use App\Model\ElasticSearchClient;
 use App\Form\ArticleType;
 use App\Model\ETL\Article\ArticleLoad;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,15 +19,15 @@ use App\Model\Newsletter;
 class BlogController extends AbstractController
 {
     /**
-     * @var ClientElasticSearch
+     * @var ElasticSearchClient
      */
     protected $client;
 
     /**
      * BlogController constructor.
-     * @param ClientElasticSearch $client
+     * @param ElasticSearchClient $client
      */
-    public function __construct(ClientElasticSearch $client)
+    public function __construct(ElasticSearchClient $client)
     {
         $this->client = $client;
     }

@@ -1,8 +1,7 @@
 <?php
 namespace App\Model\ETL\Article;
 
-use App\Model\ETL\AbstractETLBuilder;
-use Doctrine\ORM\EntityManagerInterface;
+use ElasticsearchETL\AbstractETLBuilder;
 
 class ArticleETLBuilder extends AbstractETLBuilder
 {
@@ -13,7 +12,7 @@ class ArticleETLBuilder extends AbstractETLBuilder
      * @param ArticleExtract $extract
      * @param ArticleTransform $transform
      */
-    public function __construct(ArticleLoad $load, ArticleExtract $extract, ArticleTransform $transform, EntityManagerInterface $em)
+    public function __construct(ArticleLoad $load, ArticleExtract $extract, ArticleTransform $transform)
     {
         $this->load = $load;
         $this->extract = $extract;

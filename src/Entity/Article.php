@@ -56,14 +56,6 @@ class Article
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function setUpdatedAt($id)
-    {
-        $this->id = $id;
-    }
-
     public function getTitle(): ?string
     {
         return $this->title;

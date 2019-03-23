@@ -1,4 +1,4 @@
-.PHONY:fixtures etl csfixer test test-v testfonc
+.PHONY:fixtures etl csfixer test test-v testfonc phpstan
 
 fixtures:
 	bin/console hautelook:fixtures:load --no-debug

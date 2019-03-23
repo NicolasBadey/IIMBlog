@@ -1,10 +1,10 @@
 <?php
-namespace App\tests\Model\ETL;
+namespace App\tests\Model\ETL\Article;
 
 use Prophecy\Prophet;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class TransformArticleTest extends KernelTestCase
+class ArticleTransformTest extends KernelTestCase
 {
 
     /**
