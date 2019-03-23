@@ -9,24 +9,24 @@
 
 namespace App\Tests\Functional;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Panther\PantherTestCase;
 
-class UserWorkflowTest extends WebTestCase
+class UserWorkflowTest extends PantherTestCase
 {
     public function testHome()
     {
-        $client = static::createClient();
+        $client = static::createPantherClient();
         $crawler = $client->request('GET', '/');
 
-        $this->assertStringContainsString('Welcom', $crawler->filter('main')->text());
+        $this->assertStringContainsString('Welcom', $crawler->html());
     }
 
     public function testRegister()
     {
-        $client = static::createClient();
+        $client = static::createPantherClient();
         $crawler = $client->request('GET', '/register');
 
-        $this->assertStringContainsString('Register', $crawler->filter('main')->text());
+        $this->assertStringContainsString('Register', $crawler->html());
 
         $form = $crawler->filter('form[name=registration_form]')->form([
             'registration_form[username]' => 'test@test.com',
@@ -34,25 +34,25 @@ class UserWorkflowTest extends WebTestCase
         ]);
         $crawler = $client->submit($form);
 
-        $this->assertStringContainsString('Welcome test@test.com', $crawler->filter('main')->text());
+        $this->assertStringContainsString('Welcome test@test.com', $crawler->html());
     }
 
-    public function testlogout()
+    public function testLogout()
     {
-        $client = static::createClient();
+        $client = static::createPantherClient();
         $crawler = $client->request('GET', '/logout');
 
-        $this->assertStringNotContainsString('Welcome test@test.com', $crawler->filter('main')->text());
-        $this->assertStringContainsString('Welcome', $crawler->filter('main')->text());
+        $this->assertStringNotContainsString('Welcome test@test.com', $crawler->html());
+        $this->assertStringContainsString('Welcome', $crawler->html());
     }
 
     public function testLogin()
     {
-        $client = static::createClient();
+        $client = static::createPantherClient();
 
         $crawler = $client->request('GET', '/login');
 
-        $this->assertStringContainsString('Please sign in', $crawler->filter('main')->text());
+        $this->assertStringContainsString('Please sign in', $crawler->html());
 
         $form = $crawler->filter('#login')->form([
             'username' => 'test@test.com',
@@ -60,6 +60,6 @@ class UserWorkflowTest extends WebTestCase
         ]);
         $crawler = $client->submit($form);
 
-        $this->assertStringContainsString('Welcome test@test.com', $crawler->filter('main')->text());
+        $this->assertStringContainsString('Welcome test@test.com', $crawler->html());
     }
 }
