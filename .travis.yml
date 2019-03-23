@@ -28,4 +28,4 @@ before_install:
 script:
   - vendor/bin/phpstan.phar analyse src --level=1
   - vendor/bin/php-cs-fixer fix -v --diff --dry-run
-  - vendor/bin/simple-phpunit -c phpunit-ci.xml
+  - vendor/bin/phpunit -c phpunit-ci.xml
