@@ -7,7 +7,7 @@ etl:
 	bin/console app:etl:article --no-debug -vvv
 
 csfixer:
-	php php-cs-fixer fix
+	./vendor/bin/php-cs-fixer fix
 
 test-v:
 	PANTHER_NO_HEADLESS=1 ./vendor/bin/phpunit

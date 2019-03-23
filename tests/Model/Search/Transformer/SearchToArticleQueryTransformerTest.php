@@ -11,12 +11,10 @@ namespace App\tests\Model\ETL\Article;
 
 use App\Model\ETL\Article\ArticleLoad;
 use App\Model\Search\DTO\ArticleSearch;
-use Prophecy\Prophet;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class SearchToArticleQueryTransformerTest extends KernelTestCase
 {
-
     public function testTransformArticles()
     {
         $search = new ArticleSearch();
@@ -48,7 +46,7 @@ class SearchToArticleQueryTransformerTest extends KernelTestCase
                                     'type' => 'most_fields',
                                     'fuzziness' => 'AUTO',
                                 ],
-                            ]
+                            ],
                         ],
                         'filter' => [
                             [
@@ -59,7 +57,7 @@ class SearchToArticleQueryTransformerTest extends KernelTestCase
                                         'lon' => 44,
                                     ],
                                 ],
-                            ]
+                            ],
                         ],
                     ],
                 ],
