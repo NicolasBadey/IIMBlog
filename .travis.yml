@@ -20,11 +20,6 @@ install:
   - printf "\n" | pecl install libsodium
   - composer install --prefer-dist
 
-
-before_script:
-  #wait elasticsearch up
-  - sleep 10
-
 before_install:
   - sudo add-apt-repository ppa:ondrej/php -y
   - sudo apt-get -qq update
@@ -32,4 +27,5 @@ before_install:
 
 script:
   - vendor/bin/phpstan.phar analyse src --level=1
-  - vendor/bin/phpunit -c phpunit-ci.xml
+  - vendor/bin/php-cs-fixer fix -v --diff --dry-run
+  - vendor/bin/simple-phpunit -c phpunit-ci.xml
